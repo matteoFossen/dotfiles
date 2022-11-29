@@ -1,0 +1,25 @@
+[user]
+	email = EMAIL
+	name = NOME.COGNOME
+[alias]
+	adog = "log --all --decorate --oneline --graph"
+	amend = commit --amend --no-edit
+	br = branch
+	cdiff = "!sh -c \"git diff --color=always $* | less -R -m +Gg\""
+	co = checkout
+	cob = checkout -b
+	cp = cherry-pick
+	ct = commit
+	go = "!if git branch -r | grep --quiet -E \"^  origin/main\"; then git checkout main && git pull --rebase; elif git branch -r | grep --quiet -E \"^  origin/master\"; then git checkout master && git pull --rebase; else echo \"no master or main branch here :(\"; fi"
+	hist = "log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short"
+	nah = "!git reset --hard && git clean -df"
+	rmbranches = "!git fetch -p && for branch in $(git branch -vv | grep ': gone]\\|: sparito]' | awk '{print $1}'); do git branch -D \"$branch\"; done"
+	ss = status
+	rb = rebase
+	up = pull --rebase
+[diff]
+	tool = meld
+[bashgit]
+  branchlimit = 20
+[merge]
+	conflictstyle = diff3
