@@ -26,3 +26,4 @@ code --install-extension SonarSource.sonarlint-vscode
 code --install-extension TheNouillet.symfony-vscode
 code --install-extension vscode-icons-team.vscode-icons
 code --install-extension ZainChen.json
+code --install-extension formulahendry.auto-rename-tag
