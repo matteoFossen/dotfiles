@@ -1,6 +1,6 @@
 [user]
-	email = EMAIL
-	name = NOME.COGNOME
+	email = matteo.fossen@gmail.com
+	name = matteoFossen
 [alias]
 	adog = "log --all --decorate --oneline --graph"
 	amend = commit --amend --no-edit
