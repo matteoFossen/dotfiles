@@ -1,1 +1,147 @@
+" PLUGINS ---------------------------------------------------------------- {{{
+
+" Plugin code goes here.
+
 colorscheme dracula
+
+call plug#begin('~/.vim/plugged')
+
+" Directory management
+Plug 'preservim/nerdtree'
+
+" Git changes highlight
+Plug 'vim-gitgutter'
+
+" File searching
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+
+" Autocompletion
+Plug 'ycm-core/YouCompleteMe'
+
+" Go
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+
+" Javascript
+
+
+" PHP
+Plug 'neoclide/coc.nvim', {'branch': 'release'} " run ':CocInstall coc-phpls coc-json coc-html coc-css coc-tsserver'
+
+" XML
+Plug 'sukima/xmledit'
+
+call plug#end()
+
+" }}}
+
+
+" MAPPINGS --------------------------------------------------------------- {{{
+
+" Mappings code goes here.
+
+" Center the cursor vertically when moving to the next word during a search.
+nnoremap n nzz
+nnoremap N Nzz
+
+" Resize split windows using arrow keys by pressing:
+" CTRL+UP, CTRL+DOWN, CTRL+LEFT, or CTRL+RIGHT.
+noremap <c-up> <c-w>+
+noremap <c-down> <c-w>-
+noremap <c-left> <c-w>>
+noremap <c-right> <c-w><
+
+" Nerdtree: have nerdtree ignore certain files and directories.
+let NERDTreeIgnore=['\.git$', '\.jpg$', '\.mp4$', '\.ogg$', '\.iso$', '\.pyc$', '\.odt$', '\.png$', '\.gif$', '\.db$']
+
+" Fzf: mapping for finders
+let $FZF_DEFAULT_COMMAND = 'find .'
+nnoremap <leader>f :Files<CR>
+nnoremap <leader>a :Ag<CR>
+
+" }}}
+
+
+" VIMSCRIPT -------------------------------------------------------------- {{{
+
+" This will enable code folding.
+" Use the marker method of folding.
+augroup filetype_vim
+    autocmd!
+    autocmd FileType vim setlocal foldmethod=marker
+augroup END
+
+" More Vimscripts code goes here.
+
+" }}}
+
+
+" STATUS LINE ------------------------------------------------------------ {{{
+
+" Status bar code goes here.
+
+" Disable compatibility with vi which can cause unexpected issues.
+set nocompatible
+
+" Enable type file detection. Vim will be able to try to detect the type of file in use.
+filetype on
+
+" Enable plugins and load plugin for the detected file type.
+filetype plugin on
+
+" Load an indent file for the detected file type.
+filetype indent on
+
+" Turn syntax highlighting on.
+syntax on
+
+" Add numbers to each line on the left-hand side.
+set number
+
+" Highlight cursor line underneath the cursor horizontally.
+set cursorline
+
+" Set shift width to 2 spaces.
+set shiftwidth=2
+
+" Set tab width to 2 columns.
+set tabstop=2
+
+" Use space characters instead of tabs.
+set expandtab
+
+" Do not save backup files.
+set nobackup
+
+" While searching though a file incrementally highlight matching characters as you type.
+set incsearch
+
+" Ignore capital letters during search.
+set ignorecase
+
+" Show partial command you type in the last line of the screen.
+set showcmd
+
+" Show the mode you are on the last line.
+set showmode
+
+" Show matching words during a search.
+set showmatch
+
+" Use highlighting when doing a search.
+set hlsearch
+
+" Set the commands to save in history default number is 20.
+set history=1000
+
+" Enable auto completion menu after pressing TAB.
+set wildmenu
+
+" Make wildmenu behave like similar to Bash completion.
+set wildmode=list:longest
+
+" There are certain files that we would never want to edit with Vim.
+" Wildmenu will ignore files with these extensions.
+set wildignore=*.docx,*.jpg,*.png,*.gif,*.pyc,*.exe,*.flv,*.img,*.xlsx
+
+" }}}
