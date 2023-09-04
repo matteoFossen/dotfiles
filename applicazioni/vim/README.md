@@ -1,6 +1,6 @@
 # Installazione di vim
 
-1. Installare i pacchetti vim, fzf, nodejs, python, yarn, go, php
+1. Installare i pacchetti vim, fzf, nodejs, npm, python, yarn, go, php
 2. Lanciare il seguente comando per installare il Plug manager
     '''sh
     curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim    
