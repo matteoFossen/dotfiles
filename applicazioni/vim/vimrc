@@ -2,8 +2,6 @@
 
 " Plugin code goes here.
 
-colorscheme dracula
-
 call plug#begin('~/.vim/plugged')
 
 " NERD tree will be loaded on the first invocation of NERDTreeToggle command
@@ -31,6 +29,9 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'} " run ':CocInstall coc-phpls coc
 
 " XML
 Plug 'sukima/xmledit'
+
+Plugin 'dracula/vim', { 'name': 'dracula' }
+colorscheme dracula
 
 call plug#end()
 
