@@ -6,8 +6,8 @@ colorscheme dracula
 
 call plug#begin('~/.vim/plugged')
 
-" Directory management
-Plug 'preservim/nerdtree'
+" NERD tree will be loaded on the first invocation of NERDTreeToggle command
+Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
 
 " Git changes highlight
 Plug 'vim-gitgutter'
@@ -17,10 +17,11 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
 " Autocompletion
-Plug 'ycm-core/YouCompleteMe'
+Plug 'Shougo/vimproc.vim', { 'do': 'make' }
+Plug 'ycm-core/YouCompleteMe', { 'do': './install.py' }
 
 " Go
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
 
 " Javascript
 
