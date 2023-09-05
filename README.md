@@ -1,41 +1,58 @@
-## BASH
-#### System
-* To overwrite bash config for Root user:  
-  * `sudo cp bashrc-ROOT /root/.bashrc`  
+# Configurazioni
 
-#### User
-* To overwrite bash config for current user:  
-  * `cp bashrc-USER ~/.bashrc`  
-  * `. ~/.bashrc`  
-* To add GIT prompt:  
-  * `curl -o ~/.bashgit https://raw.githubusercontent.com/oyvindstegard/bashgit/master/.bashgit`  
+## Applicazioni base
 
-## VIM
-#### System
-* To add vimrc config system-wide:  
-  * `sudo cp vimrc-GLOBAL /etc/vim/vimrc`  
+## JetBrains Mono Font
 
-#### User
-* To add vimrc only for current user:  
-  * `sudo apt install -y fonts-powerline vim-airline`  
-  * `sudo fc-cache -rv`  
-  * `Imposta il nuovo font in gnome-terminal > Preferenze > Profilo > Carattere`  
-  * `Installa FZF (sudo apt install fzf)`  
-  * `Installa RipGrep ()`  
-  * `curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim`  
-  * `cp vimrc-USER ~/.vimrc`  
-  * `Apri vim e poi scrivi :PlugUpdate`
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/install_manual.sh)"
+```
 
-## SCREEN
-* `sudo cp screenrc /etc/`  
+Poi chiudere il terminale e riaprirlo: in `Preferenze` > `senza nome` selezionare il font `JetBrains Mono`.
 
-## GIT
-* `cp gitconfig ~/.gitconfig`  
-* Modificare il file `~/.gitconfig` e cambiare `email` e `name` !!
+## Git
 
-## K9s
-* `k9s info`  
-* `sed -i 's/enableMouse: false/enableMouse: true/g' ~/.config/k9s/config.yml`  
-* `sed -i 's/logoless: false/logoless: true'/g ~/.config/k9s/config.yml`  
-* `sed -i 's/tail: 100/tail: 200/g ~/.config/k9s/config.yml'`
-* `sed -i 's/buffer: 500/buffer: 5000/g ~/.config/k9s/config.yml'`
+```bash
+sudo apt install curl git btop neofetch fzf
+mkdir ~/GIT
+```
+
+> Ricordarsi di usare btop, digitare `Esc` e nelle opzioni selezionare il tema dracula.
+
+## Tmux
+
+Copia il contenuto del file `tmux.conf` in `~/.tmux.conf`.
+
+```bash
+sudo apt install tmux
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+tmux
+tmux source-file ~/.tmux.conf
+```
+
+Per finire `Ctrl+b I` installerà le estensioni di tpm in tmux.
+Digitare `Ctrl+b r` per aggiornare le configurazioni correnti.
+
+## Zsh
+
+```bash
+sudo apt install zsh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+t clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+chsh -s $(which zsh)
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+```
+
+Una volta effettuato il reboot la shell di base sarà impostata su zsh.
+
+## Vim
+
+```bash
+sudo apt install vim
+git clone --depth=1 https://github.com/amix/vimrc.git ~/.vim_runtime
+sh ~/.vim_runtime/install_awesome_vimrc.sh
+```
+
+Copia il contenuto del file `my_configs.vim` in `~/.vim_runtime/my_configs.vim`.
+
