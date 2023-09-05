@@ -2,13 +2,61 @@
 
 " Plugin code goes here.
 
-call plug#begin('~/.vim/plugged')
+call plug#begin()
 
 " NERD tree will be loaded on the first invocation of NERDTreeToggle command
-Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
+Plug 'preservim/nerdtree'
 
 " Git changes highlight
 Plug 'airblade/vim-gitgutter'
+
+" Statusbar
+Plug 'vim-airline/vim-airline'
+let g:airline#extensions#tabline#formatter = 'unique_tail'
+let g:airline_powerline_fonts = 1
+
+if !exists('g:airline_symbols')
+    let g:airline_symbols = {}
+endif
+
+" unicode symbols
+let g:airline_left_sep = '»'
+let g:airline_left_sep = '▶'
+let g:airline_right_sep = '«'
+let g:airline_right_sep = '◀'
+let g:airline_symbols.linenr = '␊ '
+let g:airline_symbols.linenr = '␤ '
+let g:airline_symbols.linenr = '¶ '
+let g:airline_symbols.branch = '⎇' 
+let g:airline_symbols.paste = 'ρ '
+let g:airline_symbols.paste = 'Þ '
+let g:airline_symbols.paste = '∥ '
+let g:airline_symbols.whitespace = ''
+
+" airline symbols
+let g:airline_left_sep = ''
+let g:airline_left_alt_sep = ''
+let g:airline_right_sep = ''
+let g:airline_right_alt_sep = ''
+let g:airline_symbols.branch = ''
+let g:airline_symbols.readonly = ''
+let g:airline_symbols.linenr = ' '
+
+" If you only see boxes here it may be because your system doesn't have
+" the correct fonts. Try it in vim first and if that fails see the help
+" pages for vim-airline :help airline-troubleshooting
+
+" Sync tmux and vim statusbar
+Plug 'edkolev/tmuxline.vim'
+let g:tmuxline_powerline_separators = 1
+let g:tmuxline_preset = {
+	\ 'a': '#S',
+        \ 'win': '#I #W',
+        \ 'cwin': '#I #W',
+        \ 'z': '%d %b %H:%M',
+        \ 'options': {
+        \'status-justify': 'left'}
+	\}
 
 " File searching
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
@@ -17,19 +65,16 @@ Plug 'junegunn/fzf.vim'
 " Autocompletion
 Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 
-" Go
-Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
-
-" Javascript
-
 " PHP
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " XML
 Plug 'sukima/xmledit'
 
-Plug 'dracula/vim', { 'name': 'dracula' }
-colorscheme dracula
+" Themes
+Plug 'dracula/vim', { 'as': 'dracula' }
+let g:lightline = { 'colorscheme': 'dracula' }
+let g:airline_theme = "dracula"
 
 call plug#end()
 
@@ -55,9 +100,7 @@ noremap <c-right> <c-w><
 let NERDTreeIgnore=['\.git$', '\.jpg$', '\.mp4$', '\.ogg$', '\.iso$', '\.pyc$', '\.odt$', '\.png$', '\.gif$', '\.db$']
 
 " Fzf: mapping for finders
-let $FZF_DEFAULT_COMMAND = 'find .'
-nnoremap <leader>f :Files<CR>
-nnoremap <leader>a :Ag<CR>
+noremap <c-f> <leader>Rg<CR>
 
 " }}}
 
@@ -147,5 +190,11 @@ set wildmode=list:longest
 " There are certain files that we would never want to edit with Vim.
 " Wildmenu will ignore files with these extensions.
 set wildignore=*.docx,*.jpg,*.png,*.gif,*.pyc,*.exe,*.flv,*.img,*.xlsx
+
+" Background theme
+set background=dark
+
+" Set colorscheme
+colorscheme dracula
 
 " }}}
