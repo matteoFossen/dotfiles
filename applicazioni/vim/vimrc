@@ -100,7 +100,7 @@ noremap <c-right> <c-w><
 let NERDTreeIgnore=['\.git$', '\.jpg$', '\.mp4$', '\.ogg$', '\.iso$', '\.pyc$', '\.odt$', '\.png$', '\.gif$', '\.db$']
 
 " Fzf: mapping for finders
-noremap <c-f> <leader>Rg<CR>
+noremap <c-f> :Rg<CR>
 
 " }}}
 
