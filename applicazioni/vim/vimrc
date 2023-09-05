@@ -8,7 +8,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
 
 " Git changes highlight
-Plug 'vim-gitgutter'
+Plug 'airblade/vim-gitgutter'
 
 " File searching
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
@@ -16,21 +16,19 @@ Plug 'junegunn/fzf.vim'
 
 " Autocompletion
 Plug 'Shougo/vimproc.vim', { 'do': 'make' }
-Plug 'ycm-core/YouCompleteMe', { 'do': './install.py' }
 
 " Go
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
 
 " Javascript
 
-
 " PHP
-Plug 'neoclide/coc.nvim', {'branch': 'release'} " run ':CocInstall coc-phpls coc-json coc-html coc-css coc-tsserver'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " XML
 Plug 'sukima/xmledit'
 
-Plugin 'dracula/vim', { 'name': 'dracula' }
+Plug 'dracula/vim', { 'name': 'dracula' }
 colorscheme dracula
 
 call plug#end()
@@ -99,6 +97,10 @@ syntax on
 
 " Add numbers to each line on the left-hand side.
 set number
+
+" Set relative numbers on the left-hand side.
+set relativenumber
+
 
 " Highlight cursor line underneath the cursor horizontally.
 set cursorline
