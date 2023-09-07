@@ -4,9 +4,6 @@
 
 call plug#begin()
 
-" NERD tree will be loaded on the first invocation of NERDTreeToggle command
-Plug 'preservim/nerdtree'
-
 " Git changes highlight
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
@@ -36,6 +33,9 @@ Plug 'junegunn/fzf.vim'
 Plug 'ajmwagar/vim-deus', { 'as': 'deus' }
 let g:deus_termcolors=256
 
+" Vimux: tmux commmandline from vim
+Plug 'preservim/vimux'
+
 call plug#end()
 
 " }}}
@@ -49,15 +49,20 @@ call plug#end()
 nnoremap n nzz
 nnoremap N Nzz
 
-" Resize split windows using arrow keys by pressing:
-" CTRL+UP, CTRL+DOWN, CTRL+LEFT, or CTRL+RIGHT.
-noremap <c-up> <c-w>+
-noremap <c-down> <c-w>-
-noremap <c-left> <c-w>>
-noremap <c-right> <c-w><
+" Move faster between panes
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
 
 " Fzf: mapping for finders
 noremap <c-f> :Rg<CR>
+
+" Vimux: run last command executed by VimuxRunCommand
+map <Leader>vl :VimuxRunLastCommand<CR>
+
+" Vimux: inspect runner pane
+map <Leader>vi :VimuxInspectRunner<CR>
 
 " }}}
 
@@ -102,20 +107,19 @@ set autoindent              " indent a new line the same amount as the line just
 set number                  " add line numbers
 set relativenumber          " add line incremental numbers for faster commands
 set wildmode=longest,list   " get bash-like tab completions
-set cc=80                  " set an 80 column border for good coding style
-filetype plugin indent on   "allow auto-indenting depending on file type
+set cc=100                  " set an 100 column border for good coding style
+filetype plugin indent on   " allow auto-indenting depending on file type
 syntax on                   " syntax highlighting
 set mouse=a                 " enable mouse click
 set clipboard=unnamedplus   " using system clipboard
 filetype plugin on          " enable plugins based on filetypes
 set cursorline              " highlight current cursorline
 set ttyfast                 " Speed up scrolling in Vim
-" set spell                 " enable spell check (may need to download language package)
-set noswapfile            " disable creating swap file
-set backupdir=~/.cache/vim " Directory to store backup files.
-
-" Background theme
-set background=dark
+set spell                   " enable spell check (may need to download language package)
+set noswapfile              " disable creating swap file
+set backupdir=~/.cache/vim  " directory to store backup files.
+set background=dark         " background theme
+set splitright              " set direction to split command
 
 " Set colorscheme
 set t_Co=256
