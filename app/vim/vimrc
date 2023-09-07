@@ -11,71 +11,26 @@ Plug 'preservim/nerdtree'
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
 
-" Statusbar
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-let g:airline#extensions#tabline#formatter = 'unique_tail'
-let g:airline_powerline_fonts = 1
-let g:airline_theme = 'deus'
-
-if !exists('g:airline_symbols')
-    let g:airline_symbols = {}
+" Lightline statusbar
+Plug 'itchyny/lightline.vim'
+set laststatus=2
+set noshowmode
+if !has('gui_running')
+  set t_Co=256
 endif
-
-" unicode symbols
-let g:airline_left_sep = '»'
-let g:airline_left_sep = '▶'
-let g:airline_right_sep = '«'
-let g:airline_right_sep = '◀'
-let g:airline_symbols.linenr = '␊ '
-let g:airline_symbols.linenr = '␤ '
-let g:airline_symbols.linenr = '¶ '
-let g:airline_symbols.branch = '⎇' 
-let g:airline_symbols.paste = 'ρ '
-let g:airline_symbols.paste = 'Þ '
-let g:airline_symbols.paste = '∥ '
-let g:airline_symbols.whitespace = ''
-
-" airline symbols
-let g:airline_left_sep = ''
-let g:airline_left_alt_sep = ''
-let g:airline_right_sep = ''
-let g:airline_right_alt_sep = ''
-let g:airline_symbols.branch = ''
-let g:airline_symbols.readonly = ''
-let g:airline_symbols.linenr = ' '
-
-" If you only see boxes here it may be because your system doesn't have
-" the correct fonts. Try it in vim first and if that fails see the help
-" pages for vim-airline :help airline-troubleshooting
-
-" Sync tmux and vim statusbar
-Plug 'edkolev/tmuxline.vim'
-let g:tmuxline_powerline_separators = 1
-let g:tmuxline_preset = {
-	\ 'a': '#S',
-	\ 'win': '#I #W',
-	\ 'cwin': '#I #W',
-	\ 'z': '%d %b %H:%M',
-	\ 'options': {
-	\'status-justify': 'left'}
-\}
+let g:lightline = {
+	\ 'colorscheme': 'deus',
+	\ 'active': {
+	\ 'left': [ [ 'mode', 'paste' ], [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+	\ },
+	\ 'component_function': {
+	\ 	'gitbranch': 'FugitiveHead'
+	\ },
+	\ }
 
 " File searching
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-
-" Autocompletion
-Plug 'Shougo/vimproc.vim', { 'do': 'make' }
-Plug 'honza/vim-snippets'
-
-" Javascript
-Plug 'pangloss/vim-javascript'
-
-" PHP
-
-" XML
-Plug 'sukima/xmledit'
 
 " Themes
 Plug 'ajmwagar/vim-deus', { 'as': 'deus' }
@@ -101,9 +56,6 @@ noremap <c-down> <c-w>-
 noremap <c-left> <c-w>>
 noremap <c-right> <c-w><
 
-" Nerdtree: have nerdtree ignore certain files and directories.
-let NERDTreeIgnore=['\.git$', '\.jpg$', '\.mp4$', '\.ogg$', '\.iso$', '\.pyc$', '\.odt$', '\.png$', '\.gif$', '\.db$']
-
 " Fzf: mapping for finders
 noremap <c-f> :Rg<CR>
 
@@ -121,6 +73,14 @@ augroup END
 
 " More Vimscripts code goes here.
 
+" Netrw: configurations
+let g:netrw_liststyle = 3
+let g:netrw_banner = 0
+let g:netrw_browse_split = 4
+let g:netrw_winsize = 20
+let g:netrw_keepdir = 0
+let g:netrw_localcopydircmd = 'cp -r'
+
 " }}}
 
 
@@ -128,76 +88,31 @@ augroup END
 
 " Status bar code goes here.
 
-" Disable compatibility with vi which can cause unexpected issues.
-set nocompatible
-
-" Enable type file detection. Vim will be able to try to detect the type of file in use.
-filetype on
-
-" Enable plugins and load plugin for the detected file type.
-filetype plugin on
-
-" Load an indent file for the detected file type.
-filetype indent on
-
-" Turn syntax highlighting on.
-syntax on
-
-" Add numbers to each line on the left-hand side.
-set number
-
-" Set relative numbers on the left-hand side.
-set relativenumber
-
-
-" Highlight cursor line underneath the cursor horizontally.
-set cursorline
-
-" Set shift width to 2 spaces.
-set shiftwidth=2
-
-" Set tab width to 2 columns.
-set tabstop=2
-
-" Use space characters instead of tabs.
-set expandtab
-
-" Do not save backup files.
-set nobackup
-
-" While searching though a file incrementally highlight matching characters as you type.
-set incsearch
-
-" Ignore capital letters during search.
-set ignorecase
-
-" Show partial command you type in the last line of the screen.
-set showcmd
-
-" Show the mode you are on the last line.
-set showmode
-
-" Show matching words during a search.
-set showmatch
-
-" Use highlighting when doing a search.
-set hlsearch
-
-" Set the commands to save in history default number is 20.
-set history=1000
-
-" Enable auto completion menu after pressing TAB.
-set wildmenu
-
-" Make wildmenu behave like similar to Bash completion.
-set wildmode=list:longest
-
-" There are certain files that we would never want to edit with Vim.
-" Wildmenu will ignore files with these extensions.
-set wildignore=*.docx,*.jpg,*.png,*.gif,*.pyc,*.exe,*.flv,*.img,*.xlsx
-
-" Set paste with os registry
-set paste
+set nocompatible            " disable compatibility to old-time vi
+set showmatch               " show matching 
+set ignorecase              " case insensitive 
+set mouse=v                 " middle-click paste with 
+set hlsearch                " highlight search 
+set incsearch               " incremental search
+set tabstop=4               " number of columns occupied by a tab 
+set softtabstop=4           " see multiple spaces as tabstops so <BS> does the right thing
+set expandtab               " converts tabs to white space
+set shiftwidth=4            " width for autoindents
+set autoindent              " indent a new line the same amount as the line just typed
+set number                  " add line numbers
+set relativenumber          " add line incremental numbers for faster commands
+set wildmode=longest,list   " get bash-like tab completions
+set cc=80                  " set an 80 column border for good coding style
+filetype plugin indent on   "allow auto-indenting depending on file type
+syntax on                   " syntax highlighting
+set mouse=a                 " enable mouse click
+set clipboard=unnamedplus   " using system clipboard
+filetype plugin on          " enable plugins based on filetypes
+set cursorline              " highlight current cursorline
+set ttyfast                 " Speed up scrolling in Vim
+" set spell                 " enable spell check (may need to download language package)
+set noswapfile            " disable creating swap file
+set backupdir=~/.cache/vim " Directory to store backup files.
 
 " Background theme
 set background=dark
