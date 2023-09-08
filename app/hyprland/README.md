@@ -17,8 +17,8 @@
 
 ## Installazione
 
-Copiare `hyprland.conf` in `~/.config/hypr/hyprland.conf`
-Copiare `waybar.conf` in `~/.config/waybar/config`
-Copiare `waybar.css` in `~/.config/waybar/style.css`
-Copiare `swaylock.conf` in `~/.swaylock/config`
-Copiare `wofi.css` in `~/wofi/style.css`
+* Copiare `hyprland.conf` in `~/.config/hypr/hyprland.conf`
+* Copiare `waybar.conf` in `~/.config/waybar/config`
+* Copiare `waybar.css` in `~/.config/waybar/style.css`
+* Copiare `swaylock.conf` in `~/.swaylock/config`
+* Copiare `wofi.css` in `~/wofi/style.css`
