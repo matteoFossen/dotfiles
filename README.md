@@ -6,9 +6,6 @@
 
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/install_manual.sh)"
-mkdir -p ~/local/share/fonts/NerdFonts
-cd ~/local/share/fonts/NerdFonts
-curl -OL https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.tar.xz | tar -xvf
 ```
 
 Poi chiudere il terminale e riaprirlo: in `Preferenze` > `senza nome` selezionare il font `JetBrains Mono`.
