@@ -1,58 +1,57 @@
-# Configurazioni **(OLD)**
+<!-- README -->
 
-## Applicazioni base
+# LE MIE CONFIGURAZIONI
 
-## JetBrains Mono Font
+> **DISCLAIMER**
+> Tutte le mie configurazioni considerano il clone di questo repository già effettuato.
+> ```bash
+> git clone https://github.com/matteoFossen/dotfiles.git
+> ```
 
-```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/install_manual.sh)"
-```
-
-Poi chiudere il terminale e riaprirlo: in `Preferenze` > `senza nome` selezionare il font `JetBrains Mono`.
-
-## Git
+### JetBrains Mono Font
 
 ```bash
-sudo apt install curl git btop neofetch fzf
-mkdir ~/GIT
+curl -fsSL https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/install_manual.sh | bash -c
 ```
 
-> Ricordarsi di usare btop, digitare `Esc` e nelle opzioni selezionare il tema dracula.
+> Impostare il font `JetBrains Mono` in tutte le varie configurazioni per applicarlo.
 
-## Tmux
+### Git
 
-Copia il contenuto del file `tmux.conf` in `~/.tmux.conf`.
+```bash
+sudo apt install git htop openssl tldr
+tldr -u
+mkdir $HOME/GIT
+```
+
+### Tmux
+
+Copia il contenuto del file `tmux.conf` in `$HOME/.config/tmux/tmux.conf`.
 
 ```bash
 sudo apt install tmux
-git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+git clone https://github.com/tmux-plugins/tpm $HOME/.config/tmux/plugins/tpm
 tmux
-tmux source-file ~/.tmux.conf
+tmux source-file $HOME/.config/tmux/tmux.conf
 ```
 
 Per finire `Ctrl+b I` installerà le estensioni di tpm in tmux.
 Digitare `Ctrl+b r` per aggiornare le configurazioni correnti.
 
-## Zsh
+### Zsh
 
 ```bash
 sudo apt install zsh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-t clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+echo "export ZSH_CUSTOM=$HOME/config/zsh/oh-my-zsh" >> $HOME/config/zsh/zshrc
 chsh -s $(which zsh)
-git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | sh -c
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$HOME/config/zsh/oh-my-zsh/custom}/plugins/zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/config/zsh/oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/config/zsh/oh-my-zsh/custom}/themes/powerlevel10k
 ```
 
-Una volta effettuato il reboot la shell di base sarà impostata su zsh.
-
-## Vim
+### Vim
 
 ```bash
 sudo apt install vim
-git clone --depth=1 https://github.com/amix/vimrc.git ~/.vim_runtime
-sh ~/.vim_runtime/install_awesome_vimrc.sh
 ```
-
-Copia il contenuto del file `my_configs.vim` in `~/.vim_runtime/my_configs.vim`.
-
