@@ -32,6 +32,7 @@ git clone https://github.com/D3Ext/aesthetic-wallpapers.git wallpapers
 mkdir -p $HOME/.config/wallpaper
 mv wallpapers/images $HOME/.config/wallpaper
 rm -rf wallpapers
+feh --bg-fill --randomize $HOME/.config/wallpaper/* &
 ```
 
 ### Tmux
