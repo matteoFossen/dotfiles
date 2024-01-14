@@ -8,6 +8,15 @@
 > git clone https://github.com/matteoFossen/dotfiles.git
 > ```
 
+
+### Essenziali
+
+```bash
+sudo apt install git htop btop bmon openssl tldr net-tools build-essential
+tldr -u
+mkdir $HOME/GIT
+```
+
 ### JetBrains Mono Font
 
 ```bash
@@ -15,14 +24,6 @@ curl -fsSL https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/inst
 ```
 
 > Impostare il font `JetBrains Mono` in tutte le varie configurazioni per applicarlo.
-
-### Git
-
-```bash
-sudo apt install git htop openssl tldr
-tldr -u
-mkdir $HOME/GIT
-```
 
 ### Tmux
 
@@ -48,10 +49,4 @@ curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/instal
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$HOME/config/zsh/oh-my-zsh/custom}/plugins/zsh-autosuggestions
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/config/zsh/oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/config/zsh/oh-my-zsh/custom}/themes/powerlevel10k
-```
-
-### Vim
-
-```bash
-sudo apt install vim
 ```
