@@ -25,6 +25,15 @@ curl -fsSL https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/inst
 
 > Impostare il font `JetBrains Mono` in tutte le varie configurazioni per applicarlo.
 
+### Sfondi
+
+```bash
+git clone https://github.com/D3Ext/aesthetic-wallpapers.git wallpapers
+mkdir -p $HOME/.config/wallpaper
+mv wallpapers/images $HOME/.config/wallpaper
+rm -rf wallpapers
+```
+
 ### Tmux
 
 Copia il contenuto del file `tmux.conf` in `$HOME/.config/tmux/tmux.conf`.
