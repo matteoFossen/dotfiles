@@ -1,133 +1,138 @@
-" PLUGINS ---------------------------------------------------------------- {{{
+set shell=/bin/bash         " Ensuring standard shell
+set t_Co=256                " 256 color mode
+set encoding=utf-8          " always use utf-8
+set mouse=a                 " enable mouse usage
+set nocompatible            " should be auto-on, but to be sure...
+set number                  " Numbering on left side.
+set relativenumber          " Sets numbers relative to the current line
+au InsertEnter * :set nu    " Enter absolute number mode in insert mode
+au InsertLeave * :set rnu   "       relative ...         in normal mode
+set ttyfast                 " Rendering
+set ruler                   " Show file stats
+set modelines=0             " Security
 
-" Plugin code goes here.
+" Blink cursor on error instead of beeping (grr)
+set visualbell
 
-call plug#begin()
-
-" Git changes highlight
-Plug 'airblade/vim-gitgutter'
-Plug 'tpope/vim-fugitive'
-
-" Lightline statusbar
-Plug 'itchyny/lightline.vim'
+" Always show info line
+set showmode
+set showcmd
 set laststatus=2
-set noshowmode
-if !has('gui_running')
-  set t_Co=256
-endif
-let g:lightline = {
-	\ 'colorscheme': 'deus',
-	\ 'active': {
-	\ 'left': [ [ 'mode', 'paste' ], [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
-	\ },
-	\ 'component_function': {
-	\ 	'gitbranch': 'FugitiveHead'
-	\ },
-	\ }
 
-" File searching
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
+" Use system clipboard
+set clipboard=unnamedplus
+set clipboard+=unnamed
 
-" Themes
-Plug 'ajmwagar/vim-deus', { 'as': 'deus' }
-let g:deus_termcolors=256
+" My favorite colorschemes - with vundle/neobundle a lot more are usable
+colors desert               " almost always existent
+colorscheme gruvbox         " colorscheme if exists
+let background="dark"       " override background dark
 
-" Vimux: tmux commmandline from vim
-Plug 'preservim/vimux'
+" only show tabs with >~ and trailing spaces as ·
+highlight ColorColumn ctermbg=darkgreen
+call matchadd('ColorColumn', '\%81v',100)
+set listchars=tab:▸\ ,eol:¬
+" set list                    " Shows characters 
+set hlsearch                " hlsearches
 
-call plug#end()
+" Enable Syntax-Highlighting
+filetype off
+syntax on
+filetype on
 
-" }}}
+" Highlight current line via bold-fonts and dark grey background
+set cursorline
+highlight CursorLine term=bold cterm=bold
 
+" Wildmenu - Improved tabbing through : commands
+set wildmenu
+set wildmode=longest:full,full
 
-" MAPPINGS --------------------------------------------------------------- {{{
+" Indentation
+" set autoindent              " Autoindents
+set expandtab               " Replaces tab-press with 4 spaces
+set formatoptions=tcqrn1
+set noshiftround
+set scrolloff=4             " always have 4 lines above/below the cursor
+set shiftwidth=2            " How many columns to indent with >> and <<.
+" set si                      " Enables smart indentation
+set softtabstop=2
+set tabstop=2               " Show tabs as 4 spaces
+set textwidth=79
+set wrap
 
-" Mappings code goes here.
+" Little helpers
+let mapleader="\<Space>"    " use , as the leader key. Standard: \
 
-" Center the cursor vertically when moving to the next word during a search.
-nnoremap n nzz
-nnoremap N Nzz
+" Map Y such that it behaves like other capitals
+map Y 0y$
 
-" Move faster between panes
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
+" Map Q to repeat last recorded macro
+map Q @@
 
-" Fzf: mapping for finders
-noremap <c-f> :Rg<CR>
+" Improve up/down movement with wrapped lines
+nnoremap j gj
+nnoremap k gk
 
-" Vimux: run last command executed by VimuxRunCommand
-map <Leader>vl :VimuxRunLastCommand<CR>
+" Set w!! to force saving files as root
+cmap w!! %sudo tee > /dev/null %
 
-" Vimux: inspect runner pane
-map <Leader>vi :VimuxInspectRunner<CR>
+" Press leader/ for clearing search highlights
+noremap <silent> <leader>/ :nohls<CR>
 
-" }}}
+" Formatting
+map <leader>q gqip
 
+" Help standardized
+noremap <F1> <ESC>
 
-" VIMSCRIPT -------------------------------------------------------------- {{{
+" Use arrow keys for buffer
+noremap <left> :bp<CR>
+noremap <right> :bn<CR>
 
-" This will enable code folding.
-" Use the marker method of folding.
-augroup filetype_vim
-    autocmd!
-    autocmd FileType vim setlocal foldmethod=marker
-augroup END
+" Use +/- for incrementing and decrementing numbers
+nnoremap + <C-a>
+nnoremap - <C-x>
 
-" More Vimscripts code goes here.
+" Visual indentation
+vnoremap < <gv
+vnoremap > >gv
 
-" Netrw: configurations
-let g:netrw_liststyle = 3
-let g:netrw_banner = 0
-let g:netrw_browse_split = 4
-let g:netrw_winsize = 20
-let g:netrw_keepdir = 0
-let g:netrw_localcopydircmd = 'cp -r'
+"------------------------------------------------------------------------------
 
-" }}}
+" Keep the search pattern at the center of the screen
+nnoremap <silent> n nzz
+nnoremap <silent> N Nzz
+nnoremap <silent> * *zz
+nnoremap <silent> # #zz
+nnoremap <silent> g* g*zz
+nnoremap <silent> g# g#zz
 
+" Improve vim splits - should speak for itself
+nnoremap <silent> <leader>+ :exe "resize " . (winheight(0) * 3/2)<CR>
+nnoremap <silent> <leader>- :exe "resize " . (winheight(0) * 2/3)<CR>
+nnoremap <silent> <leader><leader>+ :exe "vertical resize " . (winwidth(0) * 3/2)<CR>
+nnoremap <silent> <leader><leader>- :exe "vertical resize " . (winwidth(0) * 2/3)<CR>
 
-" STATUS LINE ------------------------------------------------------------ {{{
+" Window management
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
 
-" Status bar code goes here.
+" Fake fullscreen by moving window in tab
+nnoremap <Leader>f :tabe %<CR>
 
-set nocompatible            " disable compatibility to old-time vi
-set showmatch               " show matching 
-set ignorecase              " case insensitive 
-set mouse=v                 " middle-click paste with 
-set hlsearch                " highlight search 
-set incsearch               " incremental search
-set tabstop=4               " number of columns occupied by a tab 
-set softtabstop=4           " see multiple spaces as tabstops so <BS> does the right thing
-set expandtab               " converts tabs to white space
-set shiftwidth=4            " width for autoindents
-set autoindent              " indent a new line the same amount as the line just typed
-set number                  " add line numbers
-set relativenumber          " add line incremental numbers for faster commands
-set wildmode=longest,list   " get bash-like tab completions
-set cc=100                  " set an 100 column border for good coding style
-filetype plugin indent on   " allow auto-indenting depending on file type
-syntax on                   " syntax highlighting
-set mouse=a                 " enable mouse click
-set clipboard=unnamedplus   " using system clipboard
-filetype plugin on          " enable plugins based on filetypes
-set cursorline              " highlight current cursorline
-set ttyfast                 " Speed up scrolling in Vim
-set spell                   " enable spell check (may need to download language package)
-set noswapfile              " disable creating swap file
-set backupdir=~/.cache/vim  " directory to store backup files.
-set background=dark         " background theme
-set splitright              " set direction to split command
+" Tab management
+nnoremap <C-t>e :tabe<CR>
+nnoremap <C-t>q :tabc<CR>
+nnoremap <C-t>h gT<CR>
+nnoremap <C-t>l gt<CR>
 
-" Set colorscheme
-set t_Co=256
-set termguicolors
-
-let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-
-colorscheme deus
-
-" }}}
+" Terminal management
+map <C-t>t :term<CR>
+tmap <C-t>t <C-c><CR><C-d><CR>
+tmap <C-h> <C-w>h
+tmap <C-j> <C-w>j
+tmap <C-k> <C-w>k
+tmap <C-l> <C-w>l
