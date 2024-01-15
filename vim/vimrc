@@ -59,7 +59,7 @@ set shiftwidth=2            " How many columns to indent with >> and <<.
 set softtabstop=2
 set tabstop=2               " Show tabs as 4 spaces
 set textwidth=79
-set wrap
+set ft=tmux tw=0 nowrap
 
 " Little helpers
 let mapleader="\<Space>"    " use , as the leader key. Standard: \
