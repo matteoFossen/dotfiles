@@ -35,6 +35,10 @@ rm -rf wallpapers
 feh --bg-fill --randomize $HOME/.config/wallpaper/* &
 ```
 
+### Terminale
+
+Per impostare i colori del terminale seguire la guida di https://github.com/Gogh-Co/Gogh
+
 ### Tmux
 
 Copia il contenuto del file `tmux.conf` in `$HOME/.config/tmux/tmux.conf`.
