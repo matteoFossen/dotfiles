@@ -25,7 +25,7 @@ set clipboard+=unnamed
 
 " My favorite colorschemes - with vundle/neobundle a lot more are usable
 colors desert               " almost always existent
-colorscheme gruvbox         " colorscheme if exists
+" colorscheme gruvbox         " colorscheme if exists
 let background="dark"       " override background dark
 
 " only show tabs with >~ and trailing spaces as ·
@@ -61,7 +61,7 @@ set tabstop=2               " Show tabs as 4 spaces
 set textwidth=79
 set ft=tmux tw=0 nowrap
 
-" Little helpers
+" <<< Leader >>>
 let mapleader="\<Space>"    " use , as the leader key. Standard: \
 
 " Map Y such that it behaves like other capitals
@@ -80,23 +80,19 @@ cmap w!! %sudo tee > /dev/null %
 " Press leader/ for clearing search highlights
 noremap <silent> <leader>/ :nohls<CR>
 
-" Formatting
-map <leader>q gqip
+" <<< Buffers >>>
+noremap <left> :bp<CR>             " Previous buffer
+noremap <right> :bn<CR>            " Next buffer
 
-" Help standardized
-noremap <F1> <ESC>
+" <<< Utility >>>
+nnoremap + <C-a>                   " Increment numbers
+nnoremap - <C-x>                   " Decrement numbers
+noremap <F1> <ESC>                 " Help standardized
 
-" Use arrow keys for buffer
-noremap <left> :bp<CR>
-noremap <right> :bn<CR>
-
-" Use +/- for incrementing and decrementing numbers
-nnoremap + <C-a>
-nnoremap - <C-x>
-
-" Visual indentation
-vnoremap < <gv
-vnoremap > >gv
+" <<< Indentation >>>
+vnoremap < <gv                     " Keep visual mode while indenting
+vnoremap > >gv                     " Keep visual mode while indenting
+map <leader>q gqip                 " Formatter
 
 "------------------------------------------------------------------------------
 
@@ -108,31 +104,40 @@ nnoremap <silent> # #zz
 nnoremap <silent> g* g*zz
 nnoremap <silent> g# g#zz
 
-" Improve vim splits - should speak for itself
+" <<< Resize >>>
 nnoremap <silent> <leader>+ :exe "resize " . (winheight(0) * 3/2)<CR>
 nnoremap <silent> <leader>- :exe "resize " . (winheight(0) * 2/3)<CR>
 nnoremap <silent> <leader><leader>+ :exe "vertical resize " . (winwidth(0) * 3/2)<CR>
 nnoremap <silent> <leader><leader>- :exe "vertical resize " . (winwidth(0) * 2/3)<CR>
 
-" Window management
-nnoremap <C-h> <C-w>h
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-l> <C-w>l
+" <<< Windows >>>
+cmap w!! %sudo tee > /dev/null %   " Save as root
+nnoremap <Leader>wh <C-w>h         " Left window
+nnoremap <Leader>wj <C-w>j         " Lower window
+nnoremap <Leader>wk <C-w>k         " Upper window
+nnoremap <Leader>wl <C-w>l         " Right window
+nnoremap <Leader>wt :term<CR>      " Terminal
+nnoremap <Leader>wf :tabe %<CR>    " Current window -> tab
 
-" Fake fullscreen by moving window in tab
-nnoremap <Leader>f :tabe %<CR>
+" <<< Tabs >>>
+nnoremap <Leader>te :tabe<CR>
+nnoremap <Leader>th gT<CR>
+nnoremap <Leader>tl gt<CR>
+nnoremap <Leader>tq :tabc<CR>
 
-" Tab management
-nnoremap <C-t>e :tabe<CR>
-nnoremap <C-t>q :tabc<CR>
-nnoremap <C-t>h gT<CR>
-nnoremap <C-t>l gt<CR>
-
-" Terminal management
-map <C-t>t :term<CR>
-tmap <C-t>t <C-c><CR><C-d><CR>
+" <<< Terminal >>>
 tmap <C-h> <C-w>h
 tmap <C-j> <C-w>j
 tmap <C-k> <C-w>k
 tmap <C-l> <C-w>l
+tmap <C-t>t <C-c><CR><C-d><CR>
+
+"------------------------------------------------------------------------------
+
+" TO DO:
+
+" * Find files
+" * Find hidden files
+" * Find content
+" * ctags
+" * Git blame
