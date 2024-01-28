@@ -53,6 +53,14 @@ tmux source-file $HOME/.config/tmux/tmux.conf
 Per finire `Ctrl+b I` installerà le estensioni di tpm in tmux.
 Digitare `Ctrl+b r` per aggiornare le configurazioni correnti.
 
+### ChatGPT
+
+Seguire la giuda al link https://github.com/aandrew-me/tgpt  
+Per dargli voce utilizzare https://github.com/rhasspy/piper  
+
+> To do:  
+> Aggiungere un programma che permette di ascoltare le istruzioni da dare a chatGPT  
+
 ### Zsh
 
 ```bash
