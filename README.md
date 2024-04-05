@@ -12,7 +12,7 @@
 ### Essenziali
 
 ```bash
-sudo apt install git htop bmon openssl tldr net-tools build-essential ffmpeg mpv mpd ncmpcpp screen vim feh
+sudo apt install git htop bmon openssl tldr net-tools build-essential dnsutils ffmpeg mpv mpd ncmpcpp screen vim feh
 tldr -u
 mkdir $HOME/GIT
 ```
