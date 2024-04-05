@@ -12,7 +12,7 @@
 ### Essenziali
 
 ```bash
-sudo apt install git htop btop bmon openssl tldr net-tools build-essential
+sudo apt install git htop bmon openssl tldr net-tools build-essential ffmpeg mpv mpd ncmpcpp screen vim feh
 tldr -u
 mkdir $HOME/GIT
 ```
@@ -28,10 +28,10 @@ curl -fsSL https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/inst
 ### Sfondi
 
 ```bash
-git clone https://github.com/D3Ext/aesthetic-wallpapers.git wallpapers
+git clone https://github.com/D3Ext/aesthetic-wallpapers.git /tmp/wallpapers
 mkdir -p $HOME/.config/wallpaper
-mv wallpapers/images $HOME/.config/wallpaper
-rm -rf wallpapers
+mv /tmp/wallpapers/images $HOME/.config/wallpaper
+rm -rf /tmp/wallpapers
 feh --bg-fill --randomize $HOME/.config/wallpaper/* &
 ```
 
