@@ -28,7 +28,7 @@ endif
 
 " === ui: color ===
 colors desert
-colorscheme gruvbox
+" colorscheme gruvbox
 let background="dark"
 set t_Co=256                        " 256 color mode
 
