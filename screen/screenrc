@@ -127,7 +127,9 @@ bind u eval "hardstatus ignore"
 # Show hardstatus: ctrl-a U
 bind U eval "hardstatus alwayslastline"
 
-
+# read and write screen clipboard to X clipboard.
+bind > eval writebuf "exec sh -c 'xsel -bi < /tmp/screen-exchange'"
+bind < eval "exec sh -c 'xsel -bo > /tmp/screen-exchange'" readbuf
 
 # ------------------------------------------------------------------------------
 # TERMINAL SETTINGS
@@ -257,7 +259,7 @@ caption string '%?%F%{= gW}%:%{= Kk}%?%2n%f%07=%t%='
 
 
 # turn sending of screen messages to hardstatus off
-# hardstatus alwayslastline
+hardstatus alwayslastline
 #hardstatus alwayslastline '%{= M} %H%{= G} %l %= %{= w}%-w%{+b r}%n*%t%{-b r}%{w}%+w %= %{c}%d %D %{B}%c '
 
 # use this for the hard status string
@@ -275,13 +277,23 @@ caption string '%?%F%{= gW}%:%{= Kk}%?%2n%f%07=%t%='
 #hardstatus string '%{= Kd} %{= Kd}%-w%{= Kr}[%{= KW}%n %t%{= Kr}]%{= Kd}%+w %-= %{KG} %H%{KW}|%{KY}%101`%{KW}|%D %M %d %Y%{= Kc} %C%A%{-}'    #TABBED
 #
 #hardstatus string '%{= Kd} %{= Kd}%-w%{= Kr}[%{= KW}%n %t%{= Kr}]%{= Kd}%+w %-= %{KG} %H %{KW}| %{= Kc}%l %{KW}| %{KW}%D %d %M, [%c]%{-}'    # Luigi
-hardstatus alwayslastline "%{b kw}%H %{r}%1` %{w}| %{g}%c %{w}| %{y}%d.%m.%Y %{w}| %{g}%l %{w}| %{-b kw}%u %-Lw%{= rW}%50> %n%f %t %{-}%+Lw%<"        # Matteo
+
+# tmux-like
+# hardstatus string "%{b kw}%H %{r}%1` %{w}| %{g}%c %{w}| %{y}%d.%m.%Y %{w}| %{g}%l %{w}| %{-b kw}%u %-Lw%{= rW}%50> %n%f %t %{-}%+Lw%<"
+
+# centralized
+#hardstatus lastline '%{= kG}[%{G}%H%? %1`%?%{g}][%= %{= kw}%-w%{+b yk} %n*%t%?(%u)%? %{-}%+w %=%{g}][%{B}%m/%d %{W}%C%A%{g}]'
+
+# tty full
+caption always "%1>%{bk}[%<%>%{gk}%-Lw%{kg}%n%f* %t%{gk}%+Lw%< %=%{bk}%20>] [%{wk} Behind You!!! %{bk}]%<"
+hardstatus alwayslastline
+hardstatus string "%{B}[%{y}%c%{b}%{B}]-%{B}[%{R}USER@%H%{B}%? and %u%?]-[%{+b g}%n %t%{-b b}]%= %{b}[%{c}%D %d/%m/%y%{b}]-[%{m}%l%{b}]"
 
 # An alternative hardstatus to display a bar at the bottom listing the
 # windownames and highlighting the current windowname in blue. (This is only
 # enabled if there is no hardstatus setting for your terminal)
 #
-#hardstatus lastline "%-Lw%{= BW}%50>%n%f* %t%{-}%+Lw%<"
+# hardstatus lastline "%-Lw%{= BW}%50>%n%f* %t%{-}%+Lw%<"
 
 
 # ------------------------------------------------------------------------------
@@ -295,6 +307,10 @@ hardstatus alwayslastline "%{b kw}%H %{r}%1` %{w}| %{g}%c %{w}| %{y}%d.%m.%Y %{w
 #   respectively.
 #
 # screen top
-# screen -t monkey ssh monkey
-# screen -t mail 8 mutt
-# screen -t daemon 9 tail -f /var/log/daemon.log
+screen -t bash 1 $SHELL
+screen -t top 6 top
+screen -t www 7 w3m https://search.brave.com
+screen -t mail 8 mutt
+screen -t log 9 sudo tail -f /var/log/syslog
+
+screen -t main 0 $SHELL
