@@ -1,8 +1,19 @@
+" Vimrc
+" by: Fossen Matteo
+" last update: 10/04/2024 16:07
+" optional commands needs:
+"   - ctags
+"   - git
+"   - ripgrep
+
 "------------------------------------------------------------------------------
 " SYSTEM
 
 " === system: command ===
 set nocompatible                    " disable vi compatible
+
+" === system: backup ===
+set backupdir=~/.vim/backup
 
 " === system: directory ===
 " set autochdir                       " pwd in current dir
@@ -17,10 +28,10 @@ set clipboard+=unnamed
 " === system: history ===
 set history=100                     " commands history
 if version >= 703
-    set undodir=~/.vim/undodir
-    set undofile
-    set undolevels=1000
-    set undoreload=10000
+  set undodir=~/.vim/undodir
+  set undofile
+  set undolevels=1000
+  set undoreload=10000
 endif
 
 "------------------------------------------------------------------------------
@@ -28,17 +39,25 @@ endif
 
 " === ui: color ===
 colors desert
-" colorscheme gruvbox
+colorscheme gruvbox
 let background="dark"
 set t_Co=256                        " 256 color mode
 
 " === ui: content ===
+filetype plugin on                  " allow type from other plugins
 set encoding=utf-8                  " files encoding
 set mouse=a                         " enable mouse usage
 set number                          " line numbers
 set paste                           " disable comments/tab completion in paste
 " set relativenumber                  " relative line numbers
 set ruler                           " show file stats
+set hidden                          " allow edited buffer switch
+
+" === ui: custom extension ===
+augroup syntax_by_ext
+  au!
+  autocmd BufNewFile,BufRead *.html.twig set syntax=html
+augroup END
 
 " === ui: cursor ===
 highlight CursorLine term=bold cterm=bold
@@ -68,6 +87,7 @@ filetype on
 " === ui: search ===
 set hlsearch                        " highlight search
 set incsearch                       " view incremental search
+set ignorecase                      " make search case insensitive
 
 " === ui: statusbar ===
 set laststatus=2                    " statusbar mode
@@ -100,17 +120,20 @@ set ttyfast                         " rendering
 " MAPPING
 
 " === map: leader ===
-let mapleader="\<Space>"    " use , as the leader key. Standard: \
+let mapleader="\<Space>"
+let maplocalleader="_"
 
 " === map: macro ===
 map Q @@                           " repeat last recorded macro
 
 " === map: buffer ===
-noremap <Leader>bp :bp<CR>         " previous buffer
-noremap <Leader>bn :bn<CR>         " next buffer
+nnoremap <leader>bd :bd<CR>        " del buffer
+noremap <leader>bn :bn<CR>         " next buffer
+noremap <leader>bp :bp<CR>         " previous buffer
 
 " === map: copy ===
-map Y 0y$                          " copy line without carriage return
+vnoremap Y 0y$                     " copy line without carriage return
+
 
 " === map: indent ===
 nnoremap <leader>q gqip            " formatter
@@ -124,35 +147,38 @@ nnoremap <silent> * *zz
 nnoremap <silent> # #zz
 nnoremap <silent> g* g*zz
 nnoremap <silent> g# g#zz
-nnoremap <silent> <leader>/ :nohls<CR> "remove search highlight
+nnoremap <silent> ]q :cnext<cr>
+nnoremap <silent> [q :cprev<cr>
+nnoremap <silent> <leader>/ :nohls<CR>
 
 " === map: replace ===
 nnoremap + <C-a>                   " increment numbers
 nnoremap - <C-x>                   " decrement numbers
 nnoremap <leader>sr :%s/\<<C-r><C-w>\>//g<left><left>
+xnoremap * :<c-u>let @/=@"<cr>gvy:let [@/,@"]=[@",@/]<cr>/\V<c-r>=substitute(escape(@/,'/\'),'\n','\\n','g')<cr><cr>
 
 " === map: wrap ===
 nnoremap j gj
 nnoremap k gk
 
 " === map: window ===
-cmap w!! %sudo tee > /dev/null %   " save as root
-nnoremap <Leader>h <C-w>h         " left window
-nnoremap <Leader>j <C-w>j         " lower window
-nnoremap <Leader>k <C-w>k         " upper window
-nnoremap <Leader>l <C-w>l         " right window
-nnoremap <Leader>wf :tabe %<CR>    " current window to tab
-nnoremap <Leader>wt :term<CR>      " terminal
+cmap w!! %sudo tee > /dev/null %                  " save as root
+nnoremap <leader>h <C-w>h                         " left window
+nnoremap <leader>j <C-w>j                         " lower window
+nnoremap <leader>k <C-w>k                         " upper window
+nnoremap <leader>l <C-w>l                         " right window
+nnoremap <leader>wf :tabe %<CR>                   " current window to tab
+nnoremap <leader>wt :term<CR>                     " terminal
 nnoremap <silent> <leader><leader>h+ :exe "resize " . (winheight(0) * 3/2)<CR>
 nnoremap <silent> <leader><leader>h- :exe "resize " . (winheight(0) * 2/3)<CR>
 nnoremap <silent> <leader><leader>w+ :exe "vertical resize " . (winwidth(0) * 3/2)<CR>
 nnoremap <silent> <leader><leader>w- :exe "vertical resize " . (winwidth(0) * 2/3)<CR>
 
 " === map: tab ===
-nnoremap <Leader>te :tabe<CR>
-nnoremap <Leader>th gT<CR>
-nnoremap <Leader>tl gt<CR>
-nnoremap <Leader>tq :tabc<CR>
+nnoremap <leader>te :tabe<CR>
+nnoremap <leader>th gT<CR>
+nnoremap <leader>tl gt<CR>
+nnoremap <leader>tq :tabc<CR>
 
 " === map: terminal ===
 tnoremap <C-h> <C-w>h
@@ -161,11 +187,27 @@ tnoremap <C-k> <C-w>k
 tnoremap <C-l> <C-w>l
 tnoremap <C-t>t <C-c><CR><C-d><CR>
 
+" === map: quick file ===
+nnoremap <leader>en :e ~/.notes.md<CR>               " notes
+nnoremap <leader>et :e /tmp/a<CR>                    " temp file
+nnoremap <leader>ec :e ~/.config/vim/vimrc<CR>       " vim config
+
+"------------------------------------------------------------------------------
+" DIFF
+
+set diffopt+=iwhite
+set diffopt+=vertical
+set diffopt+=filler
+set diffopt+=internal,algorithm:patience
+set diffopt+=indent-heuristic
+set diffopt+=algorithm:histogram
+set virtualedit=block
+
 "------------------------------------------------------------------------------
 " SEARCH
 
 " === search: recent files ===
-augroup VIMRC
+augroup recent_files_ext
   autocmd!
   autocmd BufLeave *.css  normal! mC
   autocmd BufLeave *.html normal! mH
@@ -174,12 +216,28 @@ augroup VIMRC
 augroup END
 
 " === search: content ===
+set grepprg=rg\ -S\ --vimgrep
+function! GrepFiles(search_term)
+  lv /<args>/j **/*
+endfunction
+nnoremap <leader>sg :call GrepFiles(input('grep> '))<CR>
+
+" === search: file ===
 function! FindFiles(search_term, include_hidden)
   let currentDir = expand('%:p:h')
+
+  let command =  'find ' . currentDir . ' -type f -iname "*' . a:search_term . '*"'
   if a:include_hidden
-      let command = 'find ' . currentDir . ' -type f -iname "*' . a:search_term . '*" 2>/dev/null'
+    let command = command . ' 2>/dev/null'
   else
-      let command = 'find ' . currentDir . ' -type f -iname "*' . a:search_term . '*" -not -path "*/\.*" 2>/dev/null'
+    let command = command . ' -not -path "*/\.*" 2>/dev/null'
+  endif
+
+  if executable('rg')
+    let command = 'rg --files --color=never --iglob"' . a:search_term . '" 2>/dev/null'
+    if a:include_hidden
+      let command = 'rg --files --color=never --hidden --no-ignore --iglob "' . a:search_term . '" 2>/dev/null'
+    endif
   endif
 
   let file_list = systemlist(command)
@@ -194,41 +252,47 @@ endfunction
 nnoremap <leader>sf :call FindFiles(input('files> '), 0)<CR>
 nnoremap <leader>sF :call FindFiles(input('files (all)> '), 1)<CR>
 
-" === search: files ===
-function! GrepFiles(search_term)
-  lv /<args>/j **/*
-  lopen
-endfunction
-nnoremap <leader>sg :call GrepFiles(input('grep> '))<CR>
+"------------------------------------------------------------------------------
+" VANILLA PLUGINS
+
+" Next section contain functions that use external commands like git and ctags
 
 "------------------------------------------------------------------------------
-" PLUGIN
+" GIT
 
 " === git: blame ===
 function! GitBlame()
-    let filename = expand('%')
-    let output = system('git blame ' . filename)
-    if v:shell_error
-        echo "Error running git blame"
-        return
-    endif
+  let filename = expand('%')
+  let l:current_line = getcurpos()[1]
+  let output = system('git blame ' . filename)
+  if v:shell_error
+    echo "Error running git blame"
+    return
+  endif
 
-    vertical new
-    call append(0, split(output, "\n"))
-    setlocal buftype=nofile
-    setlocal bufhidden=hide
-    setlocal noswapfile
-    setlocal nobuflisted
-    setlocal nomodifiable
-    setlocal nowrap
-    setlocal nonumber
-    setlocal norelativenumber
-    setlocal noshowcmd
-    setlocal noshowmode
-    setlocal nolist
-    setlocal syntax=git
+  vertical new
+  call append(0, split(output, "\n"))
+  setlocal buftype=nofile
+  setlocal bufhidden=hide
+  setlocal noswapfile
+  setlocal nobuflisted
+  setlocal nomodifiable
+  setlocal nowrap
+  setlocal nonumber
+  setlocal norelativenumber
+  setlocal noshowcmd
+  setlocal noshowmode
+  setlocal nolist
+  setlocal syntax=git
+  execute 'normal ' . l:current_line . 'G'
 endfunction
 nnoremap <leader>gb :call GitBlame()<CR>
 
-" TO DO:
-" * ctags
+"------------------------------------------------------------------------------
+" CTAGS
+
+" === ctags: location ===
+set tags+=./tags;,tags
+
+" === ctags: generate ===
+nnoremap <Leader>rt :silent !ctags -R --exclude=.git--exclude=vendor --exclude=node_modules --exclude=db --exclude=log . <CR>:redraw!<CR>
