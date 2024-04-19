@@ -1,6 +1,8 @@
 " Vimrc
+
+" Vanilla vim with functionalities
 " by: Fossen Matteo
-" last update: 10/04/2024 16:07
+" last update: 19/04/2024 11:52
 " optional commands needs:
 "   - ctags
 "   - git
@@ -10,23 +12,23 @@
 " SYSTEM
 
 " === system: command ===
-set nocompatible                    " disable vi compatible
+set nocompatible                                           " disable vi compatible
 
 " === system: backup ===
 set backupdir=~/.vim/backup
 
 " === system: directory ===
-" set autochdir                       " pwd in current dir
-set autoshelldir                    " pwd in current shell
-set autowrite                       " usefull during buffer change
-set dir=/tmp                        " define dir for swap files
+" set autochdir                                            " pwd in current dir
+set autoshelldir                                           " pwd in current shell
+set autowrite                                              " usefull during buffer change
+set dir=/tmp                                               " define dir for swap files
 
 " === system: clipboard ===
-set clipboard=unnamedplus           " set system clipboard
+set clipboard=unnamedplus                                  " set system clipboard
 set clipboard+=unnamed
 
 " === system: history ===
-set history=100                     " commands history
+set history=100                                            " commands history
 if version >= 703
   set undodir=~/.vim/undodir
   set undofile
@@ -38,45 +40,58 @@ endif
 " INTERFACE
 
 " === ui: color ===
-colors desert
-colorscheme gruvbox
+colorscheme desert
+if !empty(expand(glob('~/.vim/colors/gruvbox.vim')))
+  colorscheme gruvbox
+endif
+
 let background="dark"
-set t_Co=256                        " 256 color mode
+set t_Co=256                                               " 256 color mode
 
 " === ui: content ===
-filetype plugin on                  " allow type from other plugins
-set encoding=utf-8                  " files encoding
-set mouse=a                         " enable mouse usage
-set number                          " line numbers
-set paste                           " disable comments/tab completion in paste
-" set relativenumber                  " relative line numbers
-set ruler                           " show file stats
-set hidden                          " allow edited buffer switch
+filetype plugin on                                         " allow type from other plugins
+set encoding=utf-8                                         " files encoding
+set mouse=a                                                " enable mouse usage
+set number                                                 " line numbers
+set paste                                                  " disable comments/tab completion in paste
+" set relativenumber                                       " relative line numbers
+set ruler                                                  " show file stats
+set hidden                                                 " allow edited buffer switch
 
-" === ui: custom extension ===
-augroup syntax_by_ext
+" === ui: syntax ===
+set omnifunc=syntaxcomplete#Complete
+
+augroup ui_syntax
   au!
-  autocmd BufNewFile,BufRead *.html.twig set syntax=html
+  au BufNewFile,BufRead *.html.twig set syntax=html
+augroup END
+
+augroup ui_syntax_completion
+  au FileType php setl ofu=phpcomplete#CompletePHP
+  au FileType ruby,eruby setl ofu=rubycomplete#Complete
+  au FileType html,xhtml setl ofu=htmlcomplete#CompleteTags
+  au FileType c setl ofu=ccomplete#CompleteCpp
+  au FileType css setl ofu=csscomplete#CompleteCSS
 augroup END
 
 " === ui: cursor ===
 highlight CursorLine term=bold cterm=bold
-set cursorline
-set visualbell                      " blink instead of beep
+set belloff=all 
+set vb t_vb=
 
 " === ui: indent ===
-" set autoindent              " autoindents
-filetype indent on          " detect indent based on file type
-set expandtab               " replaces tab with spaces
+" set autoindent                                           " autoindents
+filetype indent on                                         " detect indent based on file type
+set expandtab                                              " replaces tab with spaces
 set formatoptions=tcqrn1
 set noshiftround
-set scrolloff=4             " always have 4 lines above/below the cursor
-set shiftwidth=2            " how many columns to indent with >> and <<.
-" set si                      " enables smart indentation
-set softtabstop=2           " use spaces when tabbing
-set tabstop=2               " convert tab in spaces
-set textwidth=79            " set lines length
-" set ft=tmux tw=0 nowrap     " tmux compatibility
+set scrolloff=4                                            " always have 4 lines above/below the cursor
+set shiftwidth=2                                           " how many columns to indent with >> and <<.
+" set si                                                     " enables smart indentation
+set softtabstop=2                                          " use spaces when tabbing
+set tabstop=2                                              " convert tab in spaces
+set textwidth=79                                           " set lines length
+" set ft=tmux tw=0 nowrap                                  " tmux compatibility
 
 " === ui: highlight ===
 highlight ColorColumn ctermbg=darkgreen
@@ -85,36 +100,33 @@ syntax on
 filetype on
 
 " === ui: search ===
-set hlsearch                        " highlight search
-set incsearch                       " view incremental search
-set ignorecase                      " make search case insensitive
+set hlsearch                                               " highlight search
+set incsearch                                              " view incremental search
+set ignorecase                                             " make search case insensitive
 
 " === ui: statusbar ===
-set laststatus=2                    " statusbar mode
-set nomodeline                      " security
-set showcmd                         " show partial commands
-set showmode                        " show current mode
-set statusline=                     " clear statusline after reload
-set statusline+=\ %F\ %M\ %Y\ %R    " set left side
-set statusline+=%=                  " set separator
-set statusline+=\ row:\ %l\ col:\ %c\ percent:\ %p%% " set right side
+set laststatus=2                                           " statusbar mode
+set nomodeline                                             " security
+set showcmd                                                " show partial commands
+set showmode                                               " show current mode
+set statusline=                                            " clear statusline after reload
+set statusline+=\ %F\ %M\ %Y\ %R                           " set left side
+set statusline+=%=                                         " set separator
+set statusline+=\ %l:%c\ %p%%                              " set right side
 
 " === ui: terminal ===
-set shell=/bin/bash                 " ensuring standard shell
-set termencoding=utf-8              " shells encoding
+set shell=/bin/bash                                        " ensuring standard shell
+set termencoding=utf-8                                     " shells encoding
 
 " === ui: wildmenu ===
+set path=$PWD/**
+set wildignore=*.pyc,*.class,*.sln,*.Master,*.csproj,*.csproj.user,*.cache,*.dll,*.pdb,*.min.*,*.tar.*,*/.git/**/*,*/.hg/**/*,*/.svn/**/*,*.swp,*.bak,tags
 set wildmenu
 set wildmode=list:full
-set wildignore=*.swp,*.bak
-set wildignore+=*.pyc,*.class,*.sln,*.Master,*.csproj,*.csproj.user,*.cache,*.dll,*.pdb,*.min.*
-set wildignore+=*/.git/**/*,*/.hg/**/*,*/.svn/**/*
-set wildignore+=tags
-set wildignore+=*.tar.*
 
 " === ui: window ===
-set guitablabel=\[%N\]\ %t\ %M      " set window's tabname
-set ttyfast                         " rendering
+set guitablabel=\[%N\]\ %t\ %M                             " set window's tabname
+set ttyfast                                                " rendering
 
 "------------------------------------------------------------------------------
 " MAPPING
@@ -124,21 +136,21 @@ let mapleader="\<Space>"
 let maplocalleader="_"
 
 " === map: macro ===
-map Q @@                           " repeat last recorded macro
+map Q @@                                                   " repeat last recorded macro
 
 " === map: buffer ===
-nnoremap <leader>bd :bd<CR>        " del buffer
-noremap <leader>bn :bn<CR>         " next buffer
-noremap <leader>bp :bp<CR>         " previous buffer
+nnoremap <leader>bd :bd<CR>                                " del buffer
+noremap <leader>bn :bn<CR>                                 " next buffer
+noremap <leader>bp :bp<CR>                                 " previous buffer
 
 " === map: copy ===
-vnoremap Y 0y$                     " copy line without carriage return
+vnoremap Y 0y$                                             " copy line without carriage return
 
 
 " === map: indent ===
-nnoremap <leader>q gqip            " formatter
-vnoremap < <gv                     " keep visual mode while indenting
-vnoremap > >gv                     " keep visual mode while indenting
+nnoremap <leader>q gqip                                    " formatter
+vnoremap < <gv                                             " keep visual mode while indenting
+vnoremap > >gv                                             " keep visual mode while indenting
 
 " === map: search ===
 nnoremap <silent> n nzz
@@ -151,9 +163,15 @@ nnoremap <silent> ]q :cnext<cr>
 nnoremap <silent> [q :cprev<cr>
 nnoremap <silent> <leader>/ :nohls<CR>
 
+" === map: syntax
+inoremap <expr> <TAB> pumvisible() ? "\<C-y>" : "\<CR>"
+inoremap <expr> <Esc> pumvisible() ? "\<C-e>" : "\<Esc>"
+inoremap <expr> <C-j> pumvisible() ? "\<C-n>" : "\<Down>"
+inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<Up>"
+
 " === map: replace ===
-nnoremap + <C-a>                   " increment numbers
-nnoremap - <C-x>                   " decrement numbers
+nnoremap + <C-a>                                           " increment numbers
+nnoremap - <C-x>                                           " decrement numbers
 nnoremap <leader>sr :%s/\<<C-r><C-w>\>//g<left><left>
 xnoremap * :<c-u>let @/=@"<cr>gvy:let [@/,@"]=[@",@/]<cr>/\V<c-r>=substitute(escape(@/,'/\'),'\n','\\n','g')<cr><cr>
 
@@ -162,23 +180,23 @@ nnoremap j gj
 nnoremap k gk
 
 " === map: window ===
-cmap w!! %sudo tee > /dev/null %                  " save as root
-nnoremap <leader>h <C-w>h                         " left window
-nnoremap <leader>j <C-w>j                         " lower window
-nnoremap <leader>k <C-w>k                         " upper window
-nnoremap <leader>l <C-w>l                         " right window
-nnoremap <leader>wf :tabe %<CR>                   " current window to tab
-nnoremap <leader>wt :term<CR>                     " terminal
+cnoremap w!! %sudo tee > /dev/null %                       " save as root
+nnoremap <leader>wf :tabe %<CR>                            " current window to tab
+nnoremap <leader>wh <C-w>h                                 " left window
+nnoremap <leader>wj <C-w>j                                 " lower window
+nnoremap <leader>wk <C-w>k                                 " upper window
+nnoremap <leader>wl <C-w>l                                 " right window
+nnoremap <leader>wt :term<CR>                              " terminal
 nnoremap <silent> <leader><leader>h+ :exe "resize " . (winheight(0) * 3/2)<CR>
 nnoremap <silent> <leader><leader>h- :exe "resize " . (winheight(0) * 2/3)<CR>
 nnoremap <silent> <leader><leader>w+ :exe "vertical resize " . (winwidth(0) * 3/2)<CR>
 nnoremap <silent> <leader><leader>w- :exe "vertical resize " . (winwidth(0) * 2/3)<CR>
 
 " === map: tab ===
-nnoremap <leader>te :tabe<CR>
-nnoremap <leader>th gT<CR>
-nnoremap <leader>tl gt<CR>
-nnoremap <leader>tq :tabc<CR>
+nnoremap <leader>te :tabe<CR>                              " new tab
+nnoremap <leader>th gT<CR>                                 " next tab
+nnoremap <leader>tl gt<CR>                                 " prev tab
+nnoremap <leader>tq :tabc<CR>                              " close tab
 
 " === map: terminal ===
 tnoremap <C-h> <C-w>h
@@ -187,70 +205,56 @@ tnoremap <C-k> <C-w>k
 tnoremap <C-l> <C-w>l
 tnoremap <C-t>t <C-c><CR><C-d><CR>
 
-" === map: quick file ===
-nnoremap <leader>en :e ~/.notes.md<CR>               " notes
-nnoremap <leader>et :e /tmp/a<CR>                    " temp file
-nnoremap <leader>ec :e ~/.config/vim/vimrc<CR>       " vim config
+" === map: shortcuts ===
+nnoremap <leader>en :e ~/.notes.md<CR>                     " notes
+nnoremap <leader>et :e /tmp/a<CR>                          " temp file
+nnoremap <leader>ec :e ~/.vim/vimrc<CR>                    " vim config
+nnoremap <leader>er :browse oldfiles<CR>                   " file history
 
 "------------------------------------------------------------------------------
 " DIFF
 
+set diffopt+=algorithm:histogram
+set diffopt+=filler
+set diffopt+=indent-heuristic
+set diffopt+=internal,algorithm:patience
 set diffopt+=iwhite
 set diffopt+=vertical
-set diffopt+=filler
-set diffopt+=internal,algorithm:patience
-set diffopt+=indent-heuristic
-set diffopt+=algorithm:histogram
 set virtualedit=block
 
 "------------------------------------------------------------------------------
 " SEARCH
 
 " === search: recent files ===
-augroup recent_files_ext
-  autocmd!
-  autocmd BufLeave *.css  normal! mC
-  autocmd BufLeave *.html normal! mH
-  autocmd BufLeave *.js   normal! mJ
-  autocmd BufLeave *.php  normal! mP
+augroup search_files_recent                                " user 'P for php files
+  au!
+  au FileType css  normal! mC
+  au FileType html normal! mH
+  au FileType js   normal! mJ
+  au FileType php  normal! mP
+  au FileType twig normal! mT
 augroup END
 
 " === search: content ===
-set grepprg=rg\ -S\ --vimgrep
-function! GrepFiles(search_term)
-  lv /<args>/j **/*
+let &grepprg='grep -n -R --exclude=' . shellescape(&wildignore) . ' $*'
+set grepformat^=%f:%l:%c:%m
+if executable('rg')
+  set grepprg=rg\ --vimgrep\ --smart-case\ --follow
+endif
+
+function! Grep(...)
+  return system(join([&grepprg] + [expandcmd(a:1)], ' ') . ['2>/dev/null'])
 endfunction
-nnoremap <leader>sg :call GrepFiles(input('grep> '))<CR>
+command! -nargs=+ -complete=file_in_path -bar Grep laddexpr Grep(<f-args>) | lopen
+nnoremap <silent> <leader>sg :execute 'Grep ' . input('grep> ')<CR>
 
 " === search: file ===
-function! FindFiles(search_term, include_hidden)
-  let currentDir = expand('%:p:h')
-
-  let command =  'find ' . currentDir . ' -type f -iname "*' . a:search_term . '*"'
-  if a:include_hidden
-    let command = command . ' 2>/dev/null'
-  else
-    let command = command . ' -not -path "*/\.*" 2>/dev/null'
-  endif
-
-  if executable('rg')
-    let command = 'rg --files --color=never --iglob"' . a:search_term . '" 2>/dev/null'
-    if a:include_hidden
-      let command = 'rg --files --color=never --hidden --no-ignore --iglob "' . a:search_term . '" 2>/dev/null'
-    endif
-  endif
-
-  let file_list = systemlist(command)
-  if len(file_list) == 0
-    echo 'Not found'
-    return
-  endif
-
-  call setqflist(map(file_list, '{ "filename": v:val }'))
-  copen
+function! Find(...)
+  let s:findprg='find . -type f -iname "*%s*" -printf "%%p:1:1:%%f\n" 2>/dev/null |sort'
+  return system(printf(s:findprg, a:1))
 endfunction
-nnoremap <leader>sf :call FindFiles(input('files> '), 0)<CR>
-nnoremap <leader>sF :call FindFiles(input('files (all)> '), 1)<CR>
+command! -nargs=+ -complete=file_in_path -bar Find caddexpr Find(<f-args>) | copen
+nnoremap <silent> <leader>sf :execute 'Find ' . input("file> ")<CR>
 
 "------------------------------------------------------------------------------
 " VANILLA PLUGINS
@@ -259,40 +263,36 @@ nnoremap <leader>sF :call FindFiles(input('files (all)> '), 1)<CR>
 
 "------------------------------------------------------------------------------
 " GIT
+if executable('git')
 
-" === git: blame ===
-function! GitBlame()
-  let filename = expand('%')
-  let l:current_line = getcurpos()[1]
-  let output = system('git blame ' . filename)
-  if v:shell_error
-    echo "Error running git blame"
-    return
-  endif
+  " === git: blame ===
+  function! Blame()
+    let filename = expand('%')
+    let l:current_line = getcurpos()[1]
+    let output = system('git blame ' . expandcmd(filename))
+    if v:shell_error
+      echo "Error running git blame"
+      return
+    endif
 
-  vertical new
-  call append(0, split(output, "\n"))
-  setlocal buftype=nofile
-  setlocal bufhidden=hide
-  setlocal noswapfile
-  setlocal nobuflisted
-  setlocal nomodifiable
-  setlocal nowrap
-  setlocal nonumber
-  setlocal norelativenumber
-  setlocal noshowcmd
-  setlocal noshowmode
-  setlocal nolist
-  setlocal syntax=git
-  execute 'normal ' . l:current_line . 'G'
-endfunction
-nnoremap <leader>gb :call GitBlame()<CR>
+    vertical new
+    call append(0, split(output, "\n"))
+    execute 'normal ' . l:current_line . 'G'
+    setlocal bt=nofile bh=hide noswf nobl noma nowrap nonu nornu nosc nosmd nolist syntax=git
+  endfunction
+  nnoremap <leader>gb :call Blame()<CR>
+
+endif
 
 "------------------------------------------------------------------------------
 " CTAGS
+if executable('ctags')
 
-" === ctags: location ===
-set tags+=./tags;,tags
+  " === ctags: location ===
+  set tags+=./tags;,tags
 
-" === ctags: generate ===
-nnoremap <Leader>rt :silent !ctags -R --exclude=.git--exclude=vendor --exclude=node_modules --exclude=db --exclude=log . <CR>:redraw!<CR>
+  " === ctags: generate ===
+  nnoremap <Leader>rt :silent !ctags -R --exclude=.git--exclude=vendor --exclude=node_modules --exclude=db --exclude=log . 2>/dev/null &<CR>:redraw!<CR>:echo 'ctags generated'<CR>
+
+endif
+
