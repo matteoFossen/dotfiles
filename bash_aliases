@@ -6,6 +6,9 @@ alias grep='grep --color'
 
 # === git ===
 alias git="LANG=en_US.UTF-8 git"
+if [[ -d ${HOME}/git ]]; then
+  alias cdgit="cd ${HOME}/git"
+fi
 
 # === cargo ===
 if type cargo &>/dev/null; then
