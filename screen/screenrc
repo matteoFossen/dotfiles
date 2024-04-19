@@ -278,23 +278,24 @@ hardstatus alwayslastline
 #
 #hardstatus string '%{= Kd} %{= Kd}%-w%{= Kr}[%{= KW}%n %t%{= Kr}]%{= Kd}%+w %-= %{KG} %H %{KW}| %{= Kc}%l %{KW}| %{KW}%D %d %M, [%c]%{-}'    # Luigi
 
-# tmux-like
+# === style: tmux ===
 # hardstatus string "%{b kw}%H %{r}%1` %{w}| %{g}%c %{w}| %{y}%d.%m.%Y %{w}| %{g}%l %{w}| %{-b kw}%u %-Lw%{= rW}%50> %n%f %t %{-}%+Lw%<"
 
-# centralized
+# === style: centralized ===
 #hardstatus lastline '%{= kG}[%{G}%H%? %1`%?%{g}][%= %{= kw}%-w%{+b yk} %n*%t%?(%u)%? %{-}%+w %=%{g}][%{B}%m/%d %{W}%C%A%{g}]'
 
-# tty full
-caption always "%1>%{bk}[%<%>%{gk}%-Lw%{kg}%n%f* %t%{gk}%+Lw%< %=%{bk}%20>] [%{wk} Behind You!!! %{bk}]%<"
-hardstatus alwayslastline
-hardstatus string "%{B}[%{y}%c%{b}%{B}]-%{B}[%{R}USER@%H%{B}%? and %u%?]-[%{+b g}%n %t%{-b b}]%= %{b}[%{c}%D %d/%m/%y%{b}]-[%{m}%l%{b}]"
+# === style: full ===
+backtick 2 10 10 $HOME/.config/scripts/memory.sh
+backtick 3 10 10 $HOME/.config/scripts/ip.sh
+backtick 4 10 10 $HOME/.config/scripts/battery.sh
+caption always "%1>%{Bk}[ %<%>%{gk}%-Lw%{gk}%n%f* %t%{gk}%+Lw%< %=%{Bk}%20> ] [%{Wk} Behind You!!! %{Bk}]%<"
+hardstatus string '%{B}[ %{+b g}%n %t%{B} ]%= %{B}[ %{R}%H%{B}%? and %u%? ] %{B}[ %{c}%2`%{B} ] [ %{m}%3` %4`%{B} ] %{B}[ %{y}%d/%m/%Y %c:%s%{B} ]'
 
 # An alternative hardstatus to display a bar at the bottom listing the
 # windownames and highlighting the current windowname in blue. (This is only
 # enabled if there is no hardstatus setting for your terminal)
 #
 # hardstatus lastline "%-Lw%{= BW}%50>%n%f* %t%{-}%+Lw%<"
-
 
 # ------------------------------------------------------------------------------
 # STARTUP SCREENS
@@ -307,10 +308,17 @@ hardstatus string "%{B}[%{y}%c%{b}%{B}]-%{B}[%{R}USER@%H%{B}%? and %u%?]-[%{+b g
 #   respectively.
 #
 # screen top
+# screen -t monkey ssh monkey
 screen -t bash 1 $SHELL
-screen -t top 6 top
-screen -t www 7 w3m https://search.brave.com
-screen -t mail 8 mutt
-screen -t log 9 sudo tail -f /var/log/syslog
+# screen -t ste 2 jira issue list --assignee='stefano.cortinovis' -s~"PUBBLICATO" -s~"RISOLTO" -s~"Richiesta rigettata"
+# screen -t sspo 3 jira issue list --assignee="matteo.fossen" -s~"PUBBLICATO" -s~"RISOLTO" -s~"Richiesta rigettata"
+# screen -t portstu 4 jira issue list --project=PORTSTU --assignee="matteo.fossen" -s~"Pubblicato" -s~"Scartato" -s~"Collaudato"
+# screen -t bash 3 $SHELL
+# screen -t k9s 4 k9s
+screen -t top 5 top
+# screen -t bash 6 $SHELL
+# screen -t www 7 w3m https://search.brave.com
+# screen -t mail 8 mutt
+# screen -t log 9 sudo tail -f /var/log/syslog
 
 screen -t main 0 $SHELL
