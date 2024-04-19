@@ -29,3 +29,9 @@ esac
 if [ -f $HOME/.bash_aliases ]; then
 . $HOME/.bash_aliases
 fi
+
+export PAGER=less
+export EDITOR=vim
+
+PS1='\[\033[01;34m\]\A \[\033[01;32m\]\u@\h\[\033[00m\] \[\033[01;34m\]\W\[\033[01;33m\] $(__git_ps1 "(%s)")\[\033[00m\]> '
+PS2='- '
