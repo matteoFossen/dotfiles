@@ -288,8 +288,7 @@ hardstatus alwayslastline
 backtick 2 10 10 $HOME/.config/scripts/memory.sh
 backtick 3 10 10 $HOME/.config/scripts/ip.sh
 backtick 4 10 10 $HOME/.config/scripts/battery.sh
-caption always "%1>%{Bk}[ %<%>%{gk}%-Lw%{gk}%n%f* %t%{gk}%+Lw%< %=%{Bk}%20> ] [%{Wk} Behind You!!! %{Bk}]%<"
-hardstatus string '%{B}[ %{+b g}%n %t%{B} ]%= %{B}[ %{R}%H%{B}%? and %u%? ] %{B}[ %{c}%2`%{B} ] [ %{m}%3` %4`%{B} ] %{B}[ %{y}%d/%m/%Y %c:%s%{B} ]'
+hardstatus string '%{= .}%{B}[ %<%>%{g}%-Lw%{g}%n%f* %t%{g}%+Lw%< %= %{B}%20>] [ %{r}%H %{B}] [ %{c}%2` %{B}] [ %{m}%3` %4` %{B}] [ %{y}%d/%m/%Y %c:%s %{B}]'
 
 # An alternative hardstatus to display a bar at the bottom listing the
 # windownames and highlighting the current windowname in blue. (This is only
@@ -310,9 +309,6 @@ hardstatus string '%{B}[ %{+b g}%n %t%{B} ]%= %{B}[ %{R}%H%{B}%? and %u%? ] %{B}
 # screen top
 # screen -t monkey ssh monkey
 screen -t bash 1 $SHELL
-# screen -t ste 2 jira issue list --assignee='stefano.cortinovis' -s~"PUBBLICATO" -s~"RISOLTO" -s~"Richiesta rigettata"
-# screen -t sspo 3 jira issue list --assignee="matteo.fossen" -s~"PUBBLICATO" -s~"RISOLTO" -s~"Richiesta rigettata"
-# screen -t portstu 4 jira issue list --project=PORTSTU --assignee="matteo.fossen" -s~"Pubblicato" -s~"Scartato" -s~"Collaudato"
 # screen -t bash 3 $SHELL
 # screen -t k9s 4 k9s
 screen -t top 5 top
