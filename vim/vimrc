@@ -30,7 +30,7 @@ set cb=unnamedplus,unnamed
 set hi=100                                                 " cmd history
 if version >= 703
   set udir=~/.vim/undodir                                  " undo dir
-  set udf ul=1000 ur=10000                            " undo levels
+  set udf ul=1000 ur=10000                                 " undo levels
 endif
 
 "------------------------------------------------------------------------------
@@ -38,11 +38,13 @@ endif
 
 " === ui: color ===
 colo desert
-if !empty(expand(glob('~/.vim/colors/gruvbox.vim')))
-  colo gruvbox
-endif
+" if !empty(expand(glob('~/.vim/colors/accent.vim')))
+"   colo accent
+"   let g:accent_colour = 'orange'
+" endif
+colo gruvbox
 
-let background="dark"
+" let background="dark"
 set t_Co=256                                               " 256 color mode
 
 " === ui: content ===
@@ -82,9 +84,9 @@ set tw=79                                                  " lines length
 
 " === ui: highlight ===
 filetype on
-hi ColorColumn ctermbg=darkgreen
+" hi ColorColumn ctermbg=darkgreen
 hi CursorLine term=bold cterm=bold
-set bo=all                                                 " disbale bell
+set bo=all                                                 " disable bell
 syntax on
 
 " === ui: search ===
@@ -98,8 +100,8 @@ set sc                                                     " partial commands
 set smd                                                    " current mode
 set stl=                                                   " clear statusline after reload
 set stl=\ %F\ %M\ %Y\ %R                                   " set left side
-set stl+=%=                                                 " set separator
-set stl+=\ %l:%c\ %p%%\                                     " set right side
+set stl+=%=                                                " set separator
+set stl+=\ %l:%c\ %p%%\                                    " set right side
 
 " === ui: terminal ===
 set sh=/bin/bash                                           " ensuring standard shell
@@ -128,7 +130,6 @@ noremap <leader>bp :bp<CR>                                 " previous buffer
 
 " === map: copy ===
 vnoremap Y 0y$                                             " copy line without carriage return
-
 
 " === map: indent ===
 nnoremap <leader>q gqip                                    " formatter
@@ -189,7 +190,7 @@ tnoremap <ESC> <C-\><C-n>
 nnoremap <leader>en :e ~/.notes.md<CR>                     " notes
 nnoremap <leader>et :e /tmp/a<CR>                          " temp file
 nnoremap <leader>ec :e ~/.vim/vimrc<CR>                    " vim config
-nnoremap <leader>er :browse oldfiles<CR>                   " file history
+nnoremap <leader>eh :bro ol<CR>                   " file history
 
 "------------------------------------------------------------------------------
 " DIFF
@@ -205,7 +206,7 @@ aug search_files_recent                                " user 'P for php files
   au!
   au FileType css  normal! mC
   au FileType html normal! mH
-  au FileType js   normal! mJ
+  au FileType js,json   normal! mJ
   au FileType php  normal! mP
   au FileType twig normal! mT
 aug END
@@ -264,9 +265,9 @@ endif
 if executable('ctags')
 
   " === ctags: location ===
-  set tags+=/tmp/ctags
+  set tags+=~/.vim/ctags
 
   " === ctags: generate ===
-  nnoremap <Leader>rt :silent !ctags -R --exclude=.git--exclude=vendor --exclude=node_modules --exclude=db --exclude=log . 2>/dev/null &<CR>:redraw!<CR>:echo 'Generating ctags...'<CR>
+  nnoremap <Leader>rt :silent !ctags -f ~/.vim/ctags -R --exclude=.git--exclude=vendor --exclude=node_modules --exclude=db --exclude=log . 2>/dev/null &<CR>:redraw!<CR>:echo 'Generating ctags...'<CR>
 
 endif
