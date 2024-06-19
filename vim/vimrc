@@ -19,8 +19,8 @@ set nocp                                                   " disable vi compatib
 " === system: directory ===
 set asd                                                    " shell in current dir
 set aw                                                     " write before close
-set dir=~/.vim/swap                                        " swap dir
-set bdir=~/.vim/backup                                     " backup dir
+set dir=/tmp                                               " swap dir
+set bdir=/tmp                                              " backup dir
 let loaded_netrwPlugin = 1                                 " disable netrw
 
 " === system: clipboard ===
@@ -29,7 +29,7 @@ set cb=unnamedplus,unnamed
 " === system: history ===
 set hi=100                                                 " cmd history
 if version >= 703
-  set udir=~/.vim/undodir                                  " undo dir
+  set udir=/tmp                                            " undo dir
   set udf ul=1000 ur=10000                                 " undo levels
 endif
 
@@ -37,14 +37,7 @@ endif
 " INTERFACE
 
 " === ui: color ===
-colo desert
-" if !empty(expand(glob('~/.vim/colors/accent.vim')))
-"   colo accent
-"   let g:accent_colour = 'orange'
-" endif
-colo gruvbox
-
-" let background="dark"
+colo slate
 set t_Co=256                                               " 256 color mode
 
 " === ui: content ===
@@ -189,7 +182,7 @@ tnoremap <ESC> <C-\><C-n>
 " === map: shortcuts ===
 nnoremap <leader>en :e ~/.notes.md<CR>                     " notes
 nnoremap <leader>et :e /tmp/a<CR>                          " temp file
-nnoremap <leader>ec :e ~/.vim/vimrc<CR>                    " vim config
+nnoremap <leader>ec :e /tmp/vimrc<CR>                    " vim config
 nnoremap <leader>eh :bro ol<CR>                   " file history
 
 "------------------------------------------------------------------------------
@@ -256,7 +249,8 @@ if executable('git')
     execute 'normal ' . l:current_line . 'G'
     setlocal bt=nofile bh=hide noswf nobl noma nowrap nonu nornu nosc nosmd nolist syntax=git
   endfunction
-  nnoremap <leader>gb :call Blame()<CR>
+  nnoremap <leader>gb :echo system('git blame -ne -L ' . line('.') . ',' . line('.') . ' ' . expand('%:p'))<CR>
+  nnoremap <leader>gB :call Blame()<CR>
 
 endif
 
@@ -265,9 +259,9 @@ endif
 if executable('ctags')
 
   " === ctags: location ===
-  set tags+=~/.vim/ctags
+  set tags+=/tmp/ctags
 
   " === ctags: generate ===
-  nnoremap <Leader>rt :silent !ctags -f ~/.vim/ctags -R --exclude=.git--exclude=vendor --exclude=node_modules --exclude=db --exclude=log . 2>/dev/null &<CR>:redraw!<CR>:echo 'Generating ctags...'<CR>
+  nnoremap <Leader>rt :silent !ctags -f /tmp/ctags -R --exclude=.git--exclude=vendor --exclude=node_modules --exclude=db --exclude=log . 2>/dev/null &<CR>:redraw!<CR>:echo 'Generating ctags...'<CR>
 
 endif
