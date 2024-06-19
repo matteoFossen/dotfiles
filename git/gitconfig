@@ -1,6 +1,6 @@
 [user]
-  email = [EMAIL]
-  name = [NAME]
+  email = [MAIL]
+  name = [USER]
 
 [alias]
   adog = "log --all --decorate --oneline --graph"
@@ -27,6 +27,7 @@
 
 [core]
   trustctime = false
+  excludesfile = /home/matteo.fossen/.gitignore
 
 [color]
   ui = true
