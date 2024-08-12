@@ -14,8 +14,6 @@
 " === system: command ===
 set nocp                                                   " disable vi compatible
 
-" === system: backup ===
-
 " === system: directory ===
 set asd                                                    " shell in current dir
 set aw                                                     " write before close
@@ -77,7 +75,6 @@ set tw=79                                                  " lines length
 
 " === ui: highlight ===
 filetype on
-" hi ColorColumn ctermbg=darkgreen
 hi CursorLine term=bold cterm=bold
 set bo=all                                                 " disable bell
 syntax on
@@ -118,8 +115,11 @@ map Q @@                                                   " repeat last recorde
 
 " === map: buffer ===
 nnoremap <leader>bd :bd<CR>                                " del buffer
-noremap <leader>bn :bn<CR>                                 " next buffer
-noremap <leader>bp :bp<CR>                                 " previous buffer
+nnoremap <leader>bn :bn<CR>                                " next buffer
+nnoremap <leader>bp :bp<CR>                                " previous buffer
+
+" === map: toggle ===
+nnoremap <silent> <leader>cn :se nu!<CR>                   " toggle line numbers
 
 " === map: copy ===
 vnoremap Y 0y$                                             " copy line without carriage return
@@ -140,7 +140,7 @@ nnoremap <silent> ]q :cnext<cr>
 nnoremap <silent> [q :cprev<cr>
 nnoremap <silent> <leader>/ :nohls<CR>
 
-" === map: syntax
+" === map: syntax ===
 inoremap <expr> <TAB> pumvisible() ? "\<C-y>" : "\<CR>"
 inoremap <expr> <Esc> pumvisible() ? "\<C-e>" : "\<Esc>"
 inoremap <expr> <C-j> pumvisible() ? "\<C-n>" : "\<Down>"
@@ -157,13 +157,12 @@ nnoremap j gj
 nnoremap k gk
 
 " === map: window ===
-cnoremap w!! %sudo tee > /dev/null %                       " save as root
+cnoremap w!! :w !sudo tee %                                " save as root
 nnoremap <leader>wf :tabe %<CR>                            " current window to tab
 nnoremap <leader>wh <C-w>h                                 " left window
 nnoremap <leader>wj <C-w>j                                 " lower window
 nnoremap <leader>wk <C-w>k                                 " upper window
 nnoremap <leader>wl <C-w>l                                 " right window
-nnoremap <leader>wt :vertical term<CR>
 nnoremap <silent> <leader><leader>h+ :exe "resize " . (winheight(0) * 3/2)<CR>
 nnoremap <silent> <leader><leader>h- :exe "resize " . (winheight(0) * 2/3)<CR>
 nnoremap <silent> <leader><leader>w+ :exe "vertical resize " . (winwidth(0) * 3/2)<CR>
@@ -172,18 +171,18 @@ nnoremap <silent> <leader><leader>w- :exe "vertical resize " . (winwidth(0) * 2/
 " === map: tab ===
 nnoremap <leader>te :tabe<CR>                              " new tab
 nnoremap <leader>tq :tabc<CR>                              " close tab
+nnoremap <leader>tn :tabn<CR>                              " next tab
+nnoremap <leader>tp :tabp<CR>                              " prev tab
 
 " === map: terminal ===
-nnoremap <Leader>th :ter<CR>
-nnoremap <Leader>ts :vert ter<CR>
+nnoremap <leader>wt :vertical term<CR>
 nnoremap <Leader>tt :tab ter<CR>
-tnoremap <ESC> <C-\><C-n>
 
 " === map: shortcuts ===
 nnoremap <leader>en :e ~/.notes.md<CR>                     " notes
 nnoremap <leader>et :e /tmp/a<CR>                          " temp file
-nnoremap <leader>ec :e /tmp/vimrc<CR>                    " vim config
-nnoremap <leader>eh :bro ol<CR>                   " file history
+nnoremap <leader>ec :e ~/.vim/vimrc<CR>                    " vim config
+nnoremap <leader>eh :bro ol<CR>                            " file history
 
 "------------------------------------------------------------------------------
 " DIFF
@@ -249,7 +248,7 @@ if executable('git')
     execute 'normal ' . l:current_line . 'G'
     setlocal bt=nofile bh=hide noswf nobl noma nowrap nonu nornu nosc nosmd nolist syntax=git
   endfunction
-  nnoremap <leader>gb :echo system('git blame -ne -L ' . line('.') . ',' . line('.') . ' ' . expand('%:p'))<CR>
+  nnoremap <leader>gb :echo system('git blame -e -L ' . line('.') . ',' . line('.') . ' ' . expand('%:p'))<CR>
   nnoremap <leader>gB :call Blame()<CR>
 
 endif
@@ -259,9 +258,9 @@ endif
 if executable('ctags')
 
   " === ctags: location ===
-  set tags+=/tmp/ctags
+  set tags+=ctags
 
   " === ctags: generate ===
-  nnoremap <Leader>rt :silent !ctags -f /tmp/ctags -R --exclude=.git--exclude=vendor --exclude=node_modules --exclude=db --exclude=log . 2>/dev/null &<CR>:redraw!<CR>:echo 'Generating ctags...'<CR>
+  nnoremap <Leader>rt :silent !ctags -f ./ctags -R --exclude=.git--exclude=vendor --exclude=node_modules --exclude=db --exclude=log . 2>/dev/null &<CR>:redraw!<CR>:echo 'Generating ctags...'<CR>
 
 endif
