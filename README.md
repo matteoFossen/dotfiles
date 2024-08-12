@@ -12,7 +12,7 @@
 ### Essenziali
 
 ```bash
-sudo apt install git htop bmon openssl tldr net-tools build-essential dnsutils ffmpeg mpv mpd ncmpcpp screen vim feh
+sudo apt install git htop bmon openssl tldr net-tools build-essential dnsutils ffmpeg mpv mpd ncmpcpp screen vim feh sysstat lsof
 tldr -u
 mkdir $HOME/GIT
 ```
@@ -27,6 +27,8 @@ curl -fsSL https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/inst
 
 ### Sfondi
 
+* Installare feh se si vuole impostare lo sfondo
+
 ```bash
 git clone https://github.com/D3Ext/aesthetic-wallpapers.git /tmp/wallpapers
 mkdir -p $HOME/.config/wallpaper
@@ -35,23 +37,13 @@ rm -rf /tmp/wallpapers
 feh --bg-fill --randomize $HOME/.config/wallpaper/* &
 ```
 
-### Terminale
-
-Per impostare i colori del terminale seguire la guida di https://github.com/Gogh-Co/Gogh
-
 ### Tmux
 
 Copia il contenuto del file `tmux.conf` in `$HOME/.config/tmux/tmux.conf`.
 
 ```bash
 sudo apt install tmux
-git clone https://github.com/tmux-plugins/tpm $HOME/.config/tmux/plugins/tpm
-tmux
-tmux source-file $HOME/.config/tmux/tmux.conf
 ```
-
-Per finire `Ctrl+b I` installerà le estensioni di tpm in tmux.
-Digitare `Ctrl+b r` per aggiornare le configurazioni correnti.
 
 ### ChatGPT
 
