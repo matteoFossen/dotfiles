@@ -1,8 +1,5 @@
 source gruvbox.muttrc
 
-# Only for neomutt
-source gruvbox-extended.muttrc
-
 set imap_user="matteo.fossen@gmail.com"
 set imap_pass=`/usr/bin/security find-generic-password -w -a 'matteo.fossen@gmail.com' -s 'Gmail'`
 

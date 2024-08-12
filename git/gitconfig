@@ -1,6 +1,6 @@
 [user]
-  email = [MAIL]
-  name = [USER]
+  email = [mail]
+  name = [user]
 
 [alias]
   adog = "log --all --decorate --oneline --graph"
