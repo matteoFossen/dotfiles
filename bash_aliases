@@ -92,10 +92,5 @@ fi
 
 # === w3m ===
 if type w3m &>/dev/null; then
-  export WWW_HOME='duckduckgo.com'
+  export WWW_HOME='lite.duckduckgo.com/lite'
 fi
-
-# === x11 ===
-alias pbcopy="xclip -selection c"
-alias pbpaste="xclip -selection c -o"
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
