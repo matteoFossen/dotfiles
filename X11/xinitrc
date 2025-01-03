@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# === display ===
+export PRIMARY_SCREEN='DP-1-3'
+export SECOND_SCREEN='eDP-1'
+xrandr --output $PRIMARY_SCREEN --auto --right-of $SECOND_SCREEN &
+
+# === wallpaper ===
+# exec feh --bg-fill --randomize ~/.config/wallpaper/* &
+xsetroot -solid '#36454f'
+
+# === effects ===
+exec picom -f &
+
+# === statusbar ===
+exec dwmblocks &

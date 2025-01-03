@@ -1,0 +1,11 @@
+! digital clock in lower right-hand corner
+XClock*analog      : false
+XClock*background  : dimgray
+XClock*borderWidth : 0
+XClock*font        : JetBrainsMono Nerd Font
+XClock*foreground  : white
+XClock*geometry    : -2-2
+XClock*height      : 12
+XClock*padding     : 0
+XClock*render      : false
+XClock*twentyfour  : true

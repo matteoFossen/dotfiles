@@ -1,0 +1,181 @@
+### font
+display_charset UTF-8
+system_charset UTF-8
+
+### header
+accept_bad_cookie 0
+accept_cookie 0
+accept_encoding gzip, compress, bzip, bzip2, deflate
+accept_language en-US,en;q=0.5
+accept_media text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+cookie_accept_domains 
+cookie_avoid_wrong_number_of_dots 
+cookie_reject_domains 
+cross_origin_referer 0
+no_referer 1
+user_agent Mozilla/5.0 (Windows NO 10.0; rev:91.0) Gecko/20100101 Firefox91.0
+use_language_tag 1
+
+### images
+auto_image 1
+display_image 1
+ext_image_viewer 0
+ignore_null_img_alt 1
+image_color blue
+image_map_list 1
+image_scale 100
+imgdisplay kitty
+inline_img_protocol 4
+max_load_image 4
+
+### links
+argv_is_url 1
+decode_url 1
+default_url 1
+display_link 1
+display_link_number 1
+follow_locale 1
+follow_redirection 10
+
+### mails
+mailcap ~/.w3m/mailcap
+mailer /usr/bin/mail
+mailto_options 1
+
+### other programs
+editor /usr/bin/vim
+emacs_like_lineedit 0
+extbrowser qutebrowser
+extbrowser2 firefox
+extbrowser3 chromium
+extbrowser4 
+extbrowser5 
+extbrowser6 
+extbrowser7 
+extbrowser8 
+extbrowser9 
+use_lessopen 0
+
+### search
+ignorecase_search 1
+wrap_search 1
+
+### https
+retry_http 1
+ssl_ca_file 
+ssl_ca_path 
+ssl_cert_file 
+ssl_forbid_method 2, 3
+ssl_key_file 
+ssl_verify_server 1
+
+### tabs
+close_tab_back 0
+
+### theme
+active_color cyan
+active_style 1
+anchor_color blue
+basic_color terminal
+bg_color terminal
+color 1
+display_borders 0
+display_ins_del 1
+display_lineinfo 0
+form_color blue
+tabstop 2
+visited_color magenta
+
+alt_entity 1
+auto_detect 2
+auto_uncompress 0
+bgextviewer 1
+cgi_bin /usr/lib/w3m/cgi-bin
+clear_buffer 1
+confirm_qq 0
+decode_cte 0
+dictcommand file:///$LIB/w3mdict.cgi
+dirlist_cmd file:///$LIB/dirlist.cgi
+disable_secret_security_check 0
+dns_order 0
+document_charset UTF-8
+document_root /
+east_asian_width 0
+ext_dirlist 1
+ext_halfdump 0
+fix_width_conv 1
+fixed_wheel_scroll_count 5
+fold_line 1
+fold_textarea 1
+frame 1
+ftp_proxy 
+ftppass_hostnamegen 1
+ftppasswd 
+gb18030_as_ucs 0
+gopher_proxy 
+graphic_char 2
+history 10000
+http_proxy 
+https_proxy 
+indent_incr 2
+index_file 
+keymap_file keymap
+label_topline 1
+mark 1
+mark_all_pages 1
+mark_color red
+max_news 50
+meta_refresh 0
+migemo_command cmigemo -q -d /usr/share/cmigemo/utf-8/migemo-dict
+mime_types ~/.mime.types, /etc/mime.types
+multicol 1
+nextpage_topline 1
+nntpmode 
+nntpserver 
+no_cache 0
+no_proxy 
+noproxy_netaddr 0
+open_tab_blank 1
+open_tab_dl_list 1
+pagerline 10000
+passwd_file ~/.w3m/passwd
+personal_document_root ~
+pixel_per_char 32
+pixel_per_line 64
+pre_conv 0
+pre_form_file ~/.w3m/pre_form
+preserve_timestamp 1
+pseudo_inlines 1
+relative_wheel_scroll 0
+relative_wheel_scroll_ratio 30
+reverse_mouse 0
+save_hist 1
+search_conv 1
+show_cookie 0
+show_lnum 0
+show_srch_str 1
+simple_preserve_space 0
+siteconf_file ~/.w3m/siteconf
+space_autocomplete 0
+strict_iso2022 1
+target_self 1
+ucs_conv 1
+urimethodmap ~/.w3m/urimethodmap
+use_combining 1
+use_cookie 0
+use_dictcommand 1
+use_gb12345_map 0
+use_history 1
+use_jisc6226 0
+use_jisx0201 0
+use_jisx0201k 
+use_jisx0212 0
+use_jisx0213 0
+use_migemo 1
+use_mouse 1
+use_proxy 0
+use_wide 1
+vi_prec_num 1
+view_unseenobject 0
+visited_anchor 1
+

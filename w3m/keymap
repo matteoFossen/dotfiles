@@ -1,0 +1,57 @@
+# === maps: navigation ===
+
+keymap $ LINE_END
+keymap ^ LINE_BEGIN
+keymap 0 LINE_BEGIN
+keymap G END
+keymap gg BEGIN
+keymap ESC-g GOTO_LINE
+keymap w NEXT_WORD
+keymap b PREV_WORD
+keymap j COMMAND "MOVE_DOWN1"
+keymap k COMMAND "MOVE_UP1"
+
+# === maps: undo ===
+
+keymap d COMMAND "EXTERN 'echo %s >> ~/.w3m/RestoreTab.txt' ; CLOSE_TAB"
+keymap u COMMAND TAB_GOTO file:/cgi-bin/restore_tab.cgi
+keymap C-r REDO
+
+# === maps: page ===
+
+#keymap C-f NEXT_PAGE
+keymap C-f COMMAND "NEXT_PAGE"
+#keymap C-b PREV_PAGE
+keymap C-b COMMAND "PREV_PAGE"
+keymap H BACK
+keymap r RELOAD
+keymap R COMMAND "READ_SHELL 'rdrview $W3M_URL -H 2> /dev/null 1> /tmp/readable.html' ; LOAD /tmp/readable.html"
+
+# === maps: tab ===
+
+keymap J NEXT_TAB
+keymap K PREV_TAB
+keymap o GOTO
+keymap O TAB_GOTO
+keymap f COMMAND "RESHAPE ; LINK_BEGIN ; GOTO_LINK"
+keymap F COMMAND "RESHAPE ; LINK_BEGIN ; TAB_LINK"
+
+# === maps: find ===
+
+keymap / WHEREIS
+keymap ? SEARCH_BACK
+keymap n SEARCH_NEXT
+keymap N SEARCH_PREV
+
+# === maps: console ===
+
+keymap :: COMMAND
+keymap :help HELP
+keymap :downloads DOWNLOAD_LIST
+keymap :hist HISTORY
+keymap :q EXIT
+keymap :settings OPTIONS
+
+# === maps: clipboard ===
+
+keymap yy EXTERN 'printf %s | xclip -selection clipboard'

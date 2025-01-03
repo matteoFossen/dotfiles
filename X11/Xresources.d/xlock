@@ -1,0 +1,12 @@
+! actually turn the backlight off
+XLock*dpmsoff     : 1
+! plain green-on-black lock screen
+XLock*background  : black
+XLock*description : off
+XLock*echokeys    : off
+XLock*font        : JetBrainsMono Nerd Font
+XLock*foreground  : green
+XLock*info        :
+XLock*mode        : blank
+XLock*password    : password: 
+XLock*username    : username: 

@@ -1,0 +1,11 @@
+! General
+#include "Xresources.d/fonts"
+#include "Xresources.d/xidle"
+
+! Apps
+#include "Xresources.d/xlock"
+#include "Xresources.d/xclock"
+#include "Xresources.d/xterm"
+
+! Themes
+#include "Xresources.d/themes/iterm-Molokai.Xresources"

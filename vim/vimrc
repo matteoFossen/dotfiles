@@ -13,6 +13,7 @@
 
 " === system: command ===
 set nocp                                                   " disable vi compatible
+let &t_ut=''                                               " doesn't change $TERM
 
 " === system: directory ===
 set asd                                                    " shell in current dir
@@ -46,6 +47,7 @@ set nu                                                     " line numbers
 set paste                                                  " disable comments/tab completion in paste
 set ru                                                     " show file stats
 set hid                                                    " allow edited buffer switch
+set nowrap                                                 " disable line wrappping
 
 " === ui: syntax ===
 set ofu=syntaxcomplete#Complete
@@ -179,7 +181,7 @@ nnoremap <leader>wt :vertical term<CR>
 nnoremap <Leader>tt :tab ter<CR>
 
 " === map: shortcuts ===
-nnoremap <leader>en :e ~/.notes.md<CR>                     " notes
+nnoremap <leader>en :e ~/notes<CR>                         " notes
 nnoremap <leader>et :e /tmp/a<CR>                          " temp file
 nnoremap <leader>ec :e ~/.vim/vimrc<CR>                    " vim config
 nnoremap <leader>eh :bro ol<CR>                            " file history
@@ -203,20 +205,14 @@ aug search_files_recent                                " user 'P for php files
   au FileType twig normal! mT
 aug END
 
-" === search: content ===
+" === search: grep ===
 let &grepprg='grep -n -R --exclude=' . shellescape(&wildignore) . ' $*'
 set grepformat^=%f:%l:%c:%m
 if executable('rg')
   set grepprg=rg\ --vimgrep\ --smart-case\ --follow
 endif
 
-function! Grep(...)
-  return system(join([&grepprg] + [expandcmd(a:1)], ' ') . ['2>/dev/null'])
-endfunction
-command! -nargs=+ -complete=file_in_path -bar Grep laddexpr Grep(<f-args>) | lopen
-nnoremap <silent> <leader>sg :execute 'Grep ' . input('grep> ')<CR>
-
-" === search: file ===
+" === search: find ===
 function! Find(...)
   let s:findprg='find . -type f -iname "*%s*" -printf "%%p:1:1:%%f\n" 2>/dev/null |sort'
   return system(printf(s:findprg, a:1))
@@ -264,3 +260,4 @@ if executable('ctags')
   nnoremap <Leader>rt :silent !ctags -f ./ctags -R --exclude=.git--exclude=vendor --exclude=node_modules --exclude=db --exclude=log . 2>/dev/null &<CR>:redraw!<CR>:echo 'Generating ctags...'<CR>
 
 endif
+

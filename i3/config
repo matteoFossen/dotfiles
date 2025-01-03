@@ -6,9 +6,9 @@
 set $mod Mod4
 
 # === variables ===
-set $browser firefox
+set $browser qutebrowser
 set $editor vim
-set $terminal kitty
+set $terminal xterm
 
 # === display ===
 
@@ -33,16 +33,19 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock
 # Network manager
 exec --no-startup-id nm-applet
 
-# PulseAudio control
-# Key bindings for Media control keys
-bindsym XF86AudioPlay exec playerctl play
-bindsym XF86AudioPause exec playerctl pause
+# Function Keys
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
 bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPlay exec playerctl play-pause
 bindsym XF86AudioPrev exec playerctl previous
-# bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
-# bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
-# bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
-# bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym XF86MonBrightnessDown exec brightnessctl set 10%-
+bindsym XF86MonBrightnessUp exec brightnessctl set 10%+
+bindsym XF86Search exec dmenu_run
+bindsym Print exec ffmpeg -framerate 30 -f x11grab $(slop -f "-video_size %wx%h -i :0.0+%x,%y") -vframes 1 ~/Immagini/screenshot_%03d_$(date +"%Y%m%d_%H%M%S").jpeg
+bindsym XF86RFKill exec sudo rfkill toggle all
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod

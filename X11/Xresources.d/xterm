@@ -1,0 +1,56 @@
+! Mouse pointer
+*XTerm*pointerColor: white
+*XTerm*pointerColorBackground: black
+
+! remove the additional black border
+*XTerm*borderWidth            : 0
+*XTerm*internalBorder         : 2
+! set default spawning size
+*XTerm*vt100.geometry         : 80x32
+! set TERM env variable to use 256 colors
+*XTerm*termName               : xterm-256color
+! save ~10,000 lines of scrollback
+*XTerm*vt100.saveLines         : 10240
+! hide scrollbar
+*XTerm*vt100.rightScrollBar   : false
+*XTerm*vt100.scrollBar        : false
+! terminal bell tells the window manager to raise urgent flag
+*XTerm*vt100.bellIsUrgent     : false
+! disable visual bell
+*XTerm*visualBell             : false
+! set spacing between letters
+*XTerm*vt100.scaleHeight      : 1.01
+! adjust font ad you please
+*XTerm*font                   : JetBrainsMono Nerd Font
+*XTerm*faceName               : JetBrainsMono Nerd Font
+! XTerm*fontSize               : 9
+! no bold fonts - just use brighter colors
+*XTerm*allowBoldFonts         : false
+! pressing a key automatically scrolls to the bottom
+*XTerm*scrollKey              : true
+! transfer selected text to clipboard
+*XTerm*selectToClipboard      : true
+! dont allow terminal to go fullscreen
+*XTerm*fullscreen             : never
+! clicking a line selects only from the current word forward
+*XTerm*cutToBeginningOfLine   : false
+! and dont include a trailing newline in the selection!
+*XTerm*cutNewline             : false
+! some black magic to change what characters XTerm considers "word delimiters"
+*XTerm*charClass              : 33:48,36-47:48,58-59:48,61:48,63-64:48,95:48,126:48
+! select word on two clicks
+*XTerm*on2Clicks              : word
+! select whole line on three clicks
+*XTerm*on3Clicks              : line
+! keybindings
+*XTerm*Translations           : #override\n\
+            Shift <Key>Insert: insert-selection(SELECT) \n\
+             Ctrl <Key>Insert: copy-selection(SELECT) \n\
+            Ctrl Shift <Key>C: copy-selection(SELECT) \n\
+            Ctrl Shift <Key>F: maximize() \n\
+            Ctrl Shift <Key>V: insert-selection(SELECT) \n\
+      Shift <KeyPress> Select: select-cursor-start() select-cursor-end(SELECT, CUT_BUFFER0) \n\
+      Shift <KeyPress> Insert: insert-selection(SELECT, CUT_BUFFER0) \n\
+   Shift<Key>BackSpace: string(0x7f) \n\
+   Shift<Key>Delete: string(0x7f) \n
+

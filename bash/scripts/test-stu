@@ -1,0 +1,272 @@
+#!/usr/bin/env bash
+# stu - comandi utili per lo sportello
+# ultimo aggiornamento: 26/09/2024
+#
+# TO DO
+# - [x] impostare il namespace (-n)
+# - [x] impostare l'env (-e)
+# - [ ] impostare l'env per milano
+# - [ ] aggiungere --uri ai comandi (infattibile perché staging contiene prod negli env)
+# - [ ] correggere comando web
+# - [ ] check installazione
+
+set -euo pipefail
+
+help () {
+  echo -e >&2 "Uso: stu [COMANDI] [ARGS]...
+
+Comandi:
+  e, exec [CUSTOMER] [SCRIPT]           Esegue uno script PHP nel customer selezionato
+  i, info [CUSTOMER]                    Mostra le informazioni di gruppo e versione dello sportello
+  s, sh,shell [CUSTOMER]                Apre una shell nel customer selezionato
+  u, uli [CUSTOMER] [USERNAME]          (Default: utente linux) Crea un link per di autenticazione monouso basato su USERNAME
+  w, web [CUSTOMER]                     Apre il sito dello sportello nel browser predefinito
+  h, help                               Visualizza questa pagina di aiuto
+
+Opzioni:
+  -e, --env                          Scegli l'ambiente di riferimento (prod, staging)
+  -h, --help                         Visualizza questa pagina di aiuto
+  -n, --namespace                    (Default: stu) Scegli il namespace adatto
+
+Esegui 'stu [COMANDO] --help' per avere più informazioni sul comando.
+"
+}
+
+errormsg () {
+  echo -e >&2 "[ERROR] $(date -u +%Y-%m-%dT%H:%M:%S) ${1}"
+  help
+  return 1
+}
+
+__kubectl_set_env() {
+  local context
+  local context_name
+  local context_path
+
+  context_name="${1}"
+  config_path="${KUBECONFIG:-${HOME}/.kube/config}"
+
+  context="$(yq '.contexts[] | select(.name == "'"${context_name}"'") | .context.cluster' "${config_path}")"
+  if [[ -z ${context} ]]
+  then
+    context="$(yq '.contexts[] | select(.context.cluster == "'"${context_name}"'") | .context.cluster' "${config_path}")"
+  fi
+
+  ARGS[env]="${context}"
+}
+
+__kubectl_get_info() {
+  local customer
+  local resource
+
+  customer="${1:-}"
+  resource="$(__kubectl_get_resource "${customer}")"
+  kubectl get "${resource}" --context="${ARGS[env]}" --output=yaml --namespace="${ARGS[namespace]}" | yq \
+    '{ "customer": .metadata.name, "gruppo": .metadata.labels.["app.kubernetes.io/instance"], "versione": .metadata.labels.["app.kubernetes.io/version"]}'
+}
+
+__kubectl_get_installation() {
+  local customer
+  local resource
+  local resources
+
+  customer="${1:-}"
+  resources="$(kubectl get deployments.apps --context="${ARGS[env]}" --output='name' --namespace="${ARGS[namespace]}" | sed -e 's/.*\///')"
+  if [[ -n ${customer} ]]
+  then
+    resource="$(echo "${resources}" | grep -m 1 -F "stu-${customer}")"
+  else
+    resource="$(echo "${resources}" | fzf --preview "kubectl get deployments.apps --context='${ARGS[env]}' --output=yaml --namespace='${ARGS[namespace]}' {}" --height 100%)"
+  fi
+
+  resource="$(kubectl get deployments.apps --all-namespaces -l cloud.maggioli.it/customer-list --output=yaml | yq '.items[] | select(.metadata.labels.["cloud.maggioli.it/customer-list"] | contains("'"${customer}"'")) | .metadata.name')"
+  if [[ -z ${resource} ]]
+  then
+    
+  fi
+
+  if [[ -z ${resource} ]]
+  then
+    errormsg "[${ARGS[env]}] customer '${customer}' not found for namespace '${ARGS[namespace]}'"
+  fi
+  echo "deployment.apps/${resource}"
+}
+
+__kubectl_get_resource() {
+  local customer
+  local resource
+  local resources
+
+  customer="${1:-}"
+  resources="$(kubectl get deployments.apps --context="${ARGS[env]}" --output='name' --namespace="${ARGS[namespace]}" | sed -e 's/.*\///')"
+  if [[ -n ${customer} ]]
+  then
+    resource="$(echo "${resources}" | grep -m 1 -F "stu-${customer}")"
+  else
+    resource="$(echo "${resources}" | fzf --preview "kubectl get deployments.apps --context='${ARGS[env]}' --output=yaml --namespace='${ARGS[namespace]}' {}" --height 100%)"
+  fi
+
+  resource="$(kubectl get deployments.apps --all-namespaces -l cloud.maggioli.it/customer-list --output=yaml | yq '.items[] | select(.metadata.labels.["cloud.maggioli.it/customer-list"] | contains("'"${customer}"'")) | .metadata.name')"
+  if [[ -z ${resource} ]]
+  then
+    
+  fi
+
+  if [[ -z ${resource} ]]
+  then
+    errormsg "[${ARGS[env]}] customer '${customer}' not found for namespace '${ARGS[namespace]}'"
+  fi
+  echo "deployment.apps/${resource}"
+}
+
+__kubectl_exec() {
+  local cmd
+  local container
+  local customer
+  local interactive
+  local resource
+  
+  container='php'
+  interactive=''
+  case "${1}" in
+    -c)
+          container="${2}"
+          shift 2
+          ;;
+    -it)
+          interactive='--tty'
+          shift
+          ;;
+  esac
+
+  customer="${1:-}"
+  resource=''
+  if echo "${customer}" | grep '^deployment.apps\/'
+  then
+    resource="$(echo "${customer}" | grep --color=never -e '^deployment.apps\/')"
+  fi
+
+  if [[ "${resource}" == '' ]]
+  then
+    resource="$(__kubectl_get_resource "${customer}")"
+  fi
+
+  cmd="${@:2}"
+  kubectl exec "${resource}" \
+    --namespace=${ARGS[namespace]} \
+    --stdin ${interactive} \
+    --container="${container}" \
+    --context="${ARGS[env]}" \
+    -- ${cmd:-/bin/bash}
+}
+
+__kubectl_get_customer_uri() {
+  local resource
+  resource="${1:-}"    
+  __kubectl_exec "${resource}" /bin/bash -c 'echo $CUSTOMER_NAME.$APP_ENV.$STU_ROOT_DOMAIN'
+}
+
+__kubectl_exec_script() {
+  local customer
+  local script
+  local resource
+  local uri
+
+  declare -r script="${2:-}"
+  [[ ! -f "${script}" ]] && errormsg "Script not found '${script}'!"
+
+  customer="${1}"
+  resource="$(__kubectl_get_resource "${customer}")"
+
+  __kubectl_exec "${resource}" ${ARGS[drush]} php:script < "${script}"
+}
+
+__kubectl_open_web() {
+  local customer
+  local uri
+
+  customer="${1:-}"
+  uri="$(__kubectl_get_customer_uri "${customer}")"
+  xdg-open https://"${uri}"/user/login
+}
+
+__kubectl_uli() {
+  local customer
+  local user
+
+  declare -r user="${1:-$(whoami)}"
+  [[ -z "${user}" ]] && errormsg "User not found '${user}'!"
+
+  declare -r customer="${2:-}"
+  __kubectl_exec "${customer}" ${ARGS[drush]} user:login --uri="${uri}" --name="${user}"
+}
+
+declare -a REQUIRED=('fzf' 'kubectl' 'yq')
+for command in "${REQUIRED[@]}"
+do
+  if ! command -v "${command}" >/dev/null 2>&1
+  then
+    errormsg "Command '${command}' not found!"
+  fi
+done
+
+declare -A ARGS=(
+  [env]="gke_sportello-telematico-dev_europe-west1-b_staging"
+  [namespace]="stu"
+  [drush]="drush"
+  [customer]=""
+  [installation]=""
+)
+export ARGS
+
+VALID_ARGS=$(getopt -o e:hn: --long env:,help,namespace: -- "$@")
+eval set -- "${VALID_ARGS}"
+while [ : ]; do
+  case "${1}" in
+    -e | --env)
+        ARGS[env]="${2}"
+        shift 2
+        ;;
+    -h | --help)
+        help
+        break
+        ;;
+    -n | --namespace)
+        ARGS[namespace]="${2}"
+        shift 2
+        ;;
+    --) shift; 
+        break 
+        ;;
+    *) 
+        echo -e "Invalid syntax: ${@}\n"
+        help
+        break
+        ;;
+  esac
+done
+
+if test "${#}" -eq 0
+then
+  help
+  exit 2
+fi
+__kubectl_set_env "${ARGS[env]}"
+if [[ -z ${ARGS[env]} ]]
+then
+  errormsg "Selected environment not found!"
+fi
+
+ARGS[customer]="${1:-}"
+ARGS[installation]="$(__kubectl_get_installation "${ARGS[customer]}")"
+ARGS[resource]="$(__kubectl_get_resource "${ARGS[customer]}")"
+
+case "${1}" in
+  e | exec) shift; __kubectl_exec_script "${@}";;
+  i | info) shift; __kubectl_get_info "${@}";;
+  s | sh | shell) shift; __kubectl_exec '-it' "${@}";;
+  u | uli) shift; __kubectl_uli "${@}";;
+  w | web) shift; __kubectl_open_web "${@}";;
+  h | help) help ;;
+esac
+exit 2
