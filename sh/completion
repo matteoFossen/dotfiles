@@ -1,0 +1,19 @@
+#!/bin/sh
+
+BASH_COMPLETION_DIR="${HOME}/.local/share/bash-completion/completions"
+
+apps_cmd=''
+
+# shellcheck source=/dev/null
+[ -d "${BASH_COMPLETION_DIR}" ] || mkdir -p "${BASH_COMPLETION_DIR}"
+
+printf "%s\n" "$apps_cmd" |
+  while IFS='=' read -r app cmd
+  do
+    # shellcheck source=/dev/null
+    type "${app}" > /dev/null 2>&1 && ${cmd} >> "${BASH_COMPLETION_DIR}/${app}"
+  done
+
+# shellcheck source=/dev/null
+[ -s "${NVM_DIR}/bash_completion" ] && . "${NVM_DIR}/bash_completion"
+

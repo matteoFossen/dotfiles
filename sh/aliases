@@ -1,0 +1,97 @@
+#!/bin/sh
+# bash aliases
+
+alias mount='mount |column -t'
+alias mkdir='mkdir -pv'
+alias sha1='openssl sha1'
+alias bc='bc -l'
+alias wget='wget -c'
+alias iptlist='sudo /sbin/iptables -L -n -v --line-numbers'
+
+alias chown='chown --preserve-root'
+alias chmod='chmod --preserve-root'
+alias chgrp='chgrp --preserve-root'
+
+alias meminfo='free -m -l -t'
+alias psmem='ps auxf | sort -nr -k 4'
+alias psmem10='ps auxf | sort -nr -k 4 | head -10'
+alias pscpu='ps auxf | sort -nr -k 3'
+alias pscpu10='ps auxf | sort -nr -k 3 | head -10'
+alias cpuinfo='lscpu'
+alias gpumeminfo='grep -i --color memory /var/log/Xorg.0.log'
+
+# apt
+if type apt-get > /dev/null 2>&1
+then
+  alias apt-get="sudo apt-get"
+  alias update='sudo apt-get update && sudo apt-get dist-upgrade --yes && apt-get autoremove --yes && apt-get autoclean'
+fi
+
+# batcat
+if type batcat > /dev/null 2>&1
+then
+  alias bat='batcat'
+fi
+
+# cargo
+if type cargo > /dev/null 2>&1
+then
+  # shellcheck source=/dev/null
+  . "${HOME}/.cargo/env"
+fi
+
+# codium
+if type codium > /dev/null 2>&1
+then
+  alias code='codium'
+fi
+
+# docker
+if type docker > /dev/null 2>&1
+then
+  alias dr="docker run --interactive --tty --rm"
+  alias dive="dr -v /var/run/docker.sock:/var/run/docker.sock wagoodman/dive"
+fi
+
+# ffmpeg
+if type ffmpeg > /dev/null 2>&1
+then
+  alias record_webcam='ffplay -f v4l2 -vf "hflip,format=yuv420p" -video_size 480x320 -i /dev/video0'
+  alias record_screen0='ffplay -f x11grab -video_size 1920x1080 -framerate 25 -i :0.0'
+  alias record_screen1='ffplay -f x11grab -video_size 1920x1080 -framerate 25 -i :0.0+1920,0'
+  alias record_screen_all='ffplay -framerate 25 -f x11grab -i :0.0'
+  alias screenshot_0='ffmpeg -f x11grab -video_size 1920x1080 -framerate 1 -i :0.0 -vframes 1'
+  alias screenshot_1='ffmpeg -f x11grab -video_size 1920x1080 -framerate 1 -i :0.0+1920,0 -vframes 1'
+  alias screenshot_all='ffmpeg -f x11grab -framerate 1 -i :0.0 -vframes 1'
+fi
+
+# iptables
+alias iplist='sudo iptables -L -vn --line-numbers'
+
+# kitty
+if [ "${TERM}" = 'xterm-kitty' ]; then
+  alias diff='kitten diff'
+  alias emoji='kitten unicode-input'
+  alias icat='kitten icat'
+  alias notify-send='kitten notify'
+  alias ssh='kitten ssh'
+  alias pbcopy="kitten clipboard"
+  alias pbpaste="xclip -selection c -o"
+fi
+
+# wireshark
+alias wireshark='sudo wireshark >/dev/null 2>&1 &'
+
+# x11
+alias xreload="xrdb -load ~/.config/X11/Xresources"
+
+# last defaults
+alias b='URL=$(fzf --header=BOOKMARKS < "$HOME/.config/bookmarks" | awk "{print \$2}"); [ -n "$URL" ] && $BROWSER "$URL" &>/dev/null &'
+alias c='clear'
+alias d='rm -I --preserve-root'
+alias e='$EDITOR'
+alias h='history'
+alias j='jobs -l'
+alias l='ls -l'
+alias m='mv'
+

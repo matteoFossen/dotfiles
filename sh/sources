@@ -1,0 +1,11 @@
+#!/bin/sh
+
+files="fzf=${HOME}/.fzf.bash
+"
+
+# shellcheck disable=SC2034
+printf "%s\n" "$files" |
+  while IFS='=' read -r app file; do
+    # shellcheck source=/dev/null
+    [ -s "${file}" ] && . "${file}" >/dev/null 2>&1
+  done

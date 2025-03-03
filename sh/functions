@@ -1,0 +1,161 @@
+#!/bin/sh
+# bash aliases
+
+# defaults
+r() {
+  eval "${*}" >/dev/null 2>&1 &
+}
+
+infinite() {
+  while true
+  do
+    "${*}"
+  done
+}
+
+# bitwarden
+if type bw >/dev/null 2>&1
+then
+  bname() {
+    names="$(bw list items | jq -Mr '.[].name')"
+    echo "${names}" | fzf
+  }
+  bclip() {
+    name="${1:-$(bname)}"
+    bw get item "${name}" | jq -Mr '.login.password' | xclip -sel clip
+  }
+  bpass() {
+    name="${1:-$(bname)}"
+    item="$(bw get item "${name}")"
+    user="$(echo "${item}" | jq -Mr '.login.username')"
+    password="$(echo "${item}" | jq -Mr '.login.password')"
+    printf "User: %s\n" "${user}"
+    printf "Password: %s\n" "${password}"
+  }
+fi
+
+# curl
+curlify() {
+  url="${1:-duckduckgo.com}"
+  printf "Url: %s\n\n" "${url}"
+
+  printf "| %-10s | %-24s | %-4s |\n" "timestamp" "date" "code"
+  while true
+  do
+    http_code="$(curl -L -s -o /dev/null -w "%{http_code}\n" "${url}")"
+    if [ "${http_code}" -ge 100 ] && [ "${http_code}" -lt 400 ]
+    then
+      printf "| %-10s | %-24s | \e[32m%-4s\e[0m |\n" "$(date +"%s")" "$(date -u +"%d-%m-%Y %H:%M:%S +%Z")" "${http_code}"
+    else
+      printf "| %-10s | %-24s | \e[31m%-4s\e[0m |\n" "$(date +"%s")" "$(date -u +"%d-%m-%Y %H:%M:%S +%Z")" "${http_code}"
+    fi
+    sleep 1
+  done
+}
+
+hc() {
+  urls="${1:-duckduckgo.com}"
+
+  dns="${2:-9.9.9.9}"
+  sleep_duration="${3:-1}"
+  # status_file="$(mktemp)"
+
+  printf "### Url\n\n * %s\n" "$(printf '%s' "${urls}" | sed 's/,/\n * /')"
+  printf "\n### Uptime\n\n| %-24s | %-4s | %-15s |\n" "date" "code" "IP"
+  
+  printf '%s\n' "$(printf '%s' "${urls}" | sed 's/,/\n/')" |
+		while IFS='' read -r url; do
+      printf '%s' "${url}" | xargs -I {} -P 0 sh -c "
+        while true; do
+          domain=\"\$(echo '${url}' | sed -E 's#^(http[s]?://)?([^/]+).*\$#\\2#')\"
+          ip_address=\"\$(dig $(printf '@%s' "${dns}" | sed 's/,/ @/g') +short \"\${domain}\")\"
+
+          http_code=\"\$(curl --location --silent --resolve \"\${domain}:443:\${ip_address}\" -o /dev/null -w '%{http_code}\\n' '${url}')\"
+          if [ \"\${http_code}\" -ge 100 ] && [ \"\${http_code}\" -lt 400 ]; then
+            printf \"| %-10s | %-4s | \e[32m%-24s\e[0m | \e[34m%-15s\e[0m |\n\" \"\$(date -u +\"%d-%m-%Y %H:%M:%S +%Z\")\" \"\${http_code}\" \"\${ip_address}\" \"${url}\"
+          else
+            printf \"| %-10s | %-4s | \e[31m%-24s\e[0m | \e[34m%-15s\e[0m |\n\" \"\$(date -u +\"%d-%m-%Y %H:%M:%S +%Z\")\" \"\${http_code}\" \"\${ip_address}\" \"${url}\"
+            notify-send \"Error with URL: ${url}\" \"Status Code: \${http_code}\"
+          fi
+          sleep ${sleep_duration}
+        done
+      "
+  done
+}
+
+# docker
+if type docker > /dev/null 2>&1; then
+  doclean() {
+    printf "Cleaning docker resources... "
+    docker system prune -fa >/dev/null 2>&1
+    docker volume rm "$(docker volume ls -qf dangling=true)" >/dev/null 2>&1
+    printf "Cleaned!\n"
+  }
+
+  # browsers
+  browsh() {
+    dr browsh/browsh "${*:-${WWW_HOME}}"
+  }
+  carbonyl() {
+    dr fathyb/carbonyl "${*:-${WWW_HOME}}"
+  }
+fi
+
+# fff
+if type fff > /dev/null 2>&1
+then
+  FFF_CD_ON_EXIT=1
+  export FFF_CD_ON_EXIT
+
+  f() {
+      fff "$@"
+      cd "$(cat "${XDG_CACHE_HOME:=${HOME}/.cache}/fff/.fff_d")" || return 1
+  }
+fi
+
+# iptables
+ipopen() {
+  port="${1}"
+  printf "Enabling port %s..." "${port}"
+  sudo iptables -A INPUT --sport "${port}" -m conntrack --ctstate ESTABLISHED -j ACCEPT
+  sudo iptables -A INPUT --dport "${port}" -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+  printf "Port %s will be closed after 1 hour." "${port}"
+  sleep 3600
+
+  printf "Closing port %s..." "${port}"
+  ids=$(sudo iptables -L TCP -vn --line-numbers | grep ":${port} " | awk '{ print $1 }')
+  echo "${ids}" | xargs sudo iptables -D INPUT {}
+  printf "Port %s closed." "${port}"
+}
+
+# openssl
+if type openssl > /dev/null 2>&1
+then
+  p7m_get_cert() {
+    path="${1}"
+    openssl pkcs7 -inform DER -in "${path}" -print_certs | openssl x509 -text -noout | "${PAGER:-less}"
+  }
+  p7m_get_dates() {
+    path="${1}"
+    openssl pkcs7 -inform DER -in "${path}" -print_certs | openssl x509 -noout -dates
+  }
+  p7m_extract() {
+    path="${1}"
+    openssl smime -verify -noverify -in "${path}" -inform DER -out "$(echo "${1}" | sed "s/\.p7m$//")"
+  }
+  ssl_get_cert() {
+    domain="${1}"
+    port="${2:-443}"
+    echo | openssl s_client -connect "${domain}":"${port}" 2>/dev/null | openssl x509 -text -noout
+  }
+  ssl_get_dates() {
+    domain="${1}"
+    port="${2:-443}"
+    echo | openssl s_client -connect "${domain}":"${port}" 2>/dev/null | openssl x509 -noout -dates
+  }
+  ssl_verify() {
+    domain="${1}"
+    port="${2:-443}"
+    echo | openssl s_client -connect "${domain}":"${port}" -brief
+  }
+fi
