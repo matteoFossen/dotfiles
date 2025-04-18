@@ -2,7 +2,13 @@
 
 BASH_COMPLETION_DIR="${HOME}/.local/share/bash-completion/completions"
 
-apps_cmd=''
+apps_cmd="argocd=argocd completion bash
+glab=glab completion
+helm=helm completion bash
+kind=kind completion bash
+gitlab-ci-local=gitlab-ci-local --completion
+kubectl=kubectl completion bash
+stern=stern --completion bash"
 
 # shellcheck source=/dev/null
 [ -d "${BASH_COMPLETION_DIR}" ] || mkdir -p "${BASH_COMPLETION_DIR}"

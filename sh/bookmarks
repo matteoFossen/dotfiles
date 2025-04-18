@@ -1,0 +1,38 @@
+################################################
+# BOOKMARKS                                    #
+################################################
+
+#
+# EXTERNAL
+#
+
+resources  arch                  https://wiki.archlinux.org/title/Main_page
+resources  certs-mkcert          https://github.com/FiloSottile/mkcert
+resources  date-epoch-converter  https://www.epochconverter.com
+resources  harm-less             https://github.com/173duprot/harm-less
+resources  iptables              https://andreafortuna.org/2019/05/08/iptables-a-simple-cheatsheet
+resources  iptables/essentials   https://www.digitalocean.com/community/tutorials/iptables-essentials-common-firewall-rules-and-commands
+resources  iptables/template     https://www.digitalocean.com/community/tutorials/how-to-implement-a-basic-firewall-template-with-iptables-on-ubuntu-20-04
+resources  regex-regex101        https://regex101.com
+
+#
+# Shell
+#
+
+bash  posix-practices  https://github.com/SixArm/unix-shell-script-tactics
+bash  awesome-bash     https://github.com/awesome-lists/awesome-bash
+bash  bash-cheatsheet  https://devhints.io/bash
+
+#
+# UTILS
+#
+
+utils  docker-hub         https://hub.docker.com
+utils  helm-artifact-hub  https://artifacthub.io
+
+#
+# Network
+#
+
+dns  dnsdumpster  https://dnsdumpster.com
+dns  checkhost    https://check-host.net

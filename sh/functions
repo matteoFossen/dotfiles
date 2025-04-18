@@ -1,5 +1,4 @@
 #!/bin/sh
-# bash aliases
 
 # defaults
 r() {
@@ -7,15 +6,13 @@ r() {
 }
 
 infinite() {
-  while true
-  do
+  while true; do
     "${*}"
   done
 }
 
 # bitwarden
-if type bw >/dev/null 2>&1
-then
+if type bw >/dev/null 2>&1; then
   bname() {
     names="$(bw list items | jq -Mr '.[].name')"
     echo "${names}" | fzf
@@ -40,11 +37,9 @@ curlify() {
   printf "Url: %s\n\n" "${url}"
 
   printf "| %-10s | %-24s | %-4s |\n" "timestamp" "date" "code"
-  while true
-  do
+  while true; do
     http_code="$(curl -L -s -o /dev/null -w "%{http_code}\n" "${url}")"
-    if [ "${http_code}" -ge 100 ] && [ "${http_code}" -lt 400 ]
-    then
+    if [ "${http_code}" -ge 100 ] && [ "${http_code}" -lt 400 ]; then
       printf "| %-10s | %-24s | \e[32m%-4s\e[0m |\n" "$(date +"%s")" "$(date -u +"%d-%m-%Y %H:%M:%S +%Z")" "${http_code}"
     else
       printf "| %-10s | %-24s | \e[31m%-4s\e[0m |\n" "$(date +"%s")" "$(date -u +"%d-%m-%Y %H:%M:%S +%Z")" "${http_code}"
@@ -62,15 +57,15 @@ hc() {
 
   printf "### Url\n\n * %s\n" "$(printf '%s' "${urls}" | sed 's/,/\n * /')"
   printf "\n### Uptime\n\n| %-24s | %-4s | %-15s |\n" "date" "code" "IP"
-  
+
   printf '%s\n' "$(printf '%s' "${urls}" | sed 's/,/\n/')" |
-		while IFS='' read -r url; do
+    while IFS='' read -r url; do
       printf '%s' "${url}" | xargs -I {} -P 0 sh -c "
         while true; do
           domain=\"\$(echo '${url}' | sed -E 's#^(http[s]?://)?([^/]+).*\$#\\2#')\"
           ip_address=\"\$(dig $(printf '@%s' "${dns}" | sed 's/,/ @/g') +short \"\${domain}\")\"
 
-          http_code=\"\$(curl --location --silent --resolve \"\${domain}:443:\${ip_address}\" -o /dev/null -w '%{http_code}\\n' '${url}')\"
+          http_code=\"\$(curl --location --silent --resolve \"\${domain}:443:\${ip_address}\" -o /dev/null -w '%{http_code}\\n' ${url})\"
           if [ \"\${http_code}\" -ge 100 ] && [ \"\${http_code}\" -lt 400 ]; then
             printf \"| %-10s | %-4s | \e[32m%-24s\e[0m | \e[34m%-15s\e[0m |\n\" \"\$(date -u +\"%d-%m-%Y %H:%M:%S +%Z\")\" \"\${http_code}\" \"\${ip_address}\" \"${url}\"
           else
@@ -80,15 +75,15 @@ hc() {
           sleep ${sleep_duration}
         done
       "
-  done
+    done
 }
 
 # docker
-if type docker > /dev/null 2>&1; then
+if type docker >/dev/null 2>&1; then
   doclean() {
     printf "Cleaning docker resources... "
-    docker system prune -fa >/dev/null 2>&1
-    docker volume rm "$(docker volume ls -qf dangling=true)" >/dev/null 2>&1
+    sh -c "docker system prune -fa" >/dev/null 2>&1
+    sh -c "docker volume rm $(docker volume ls -qf dangling=true)" >/dev/null 2>&1
     printf "Cleaned!\n"
   }
 
@@ -98,18 +93,6 @@ if type docker > /dev/null 2>&1; then
   }
   carbonyl() {
     dr fathyb/carbonyl "${*:-${WWW_HOME}}"
-  }
-fi
-
-# fff
-if type fff > /dev/null 2>&1
-then
-  FFF_CD_ON_EXIT=1
-  export FFF_CD_ON_EXIT
-
-  f() {
-      fff "$@"
-      cd "$(cat "${XDG_CACHE_HOME:=${HOME}/.cache}/fff/.fff_d")" || return 1
   }
 fi
 
@@ -129,8 +112,7 @@ ipopen() {
 }
 
 # openssl
-if type openssl > /dev/null 2>&1
-then
+if type openssl >/dev/null 2>&1; then
   p7m_get_cert() {
     path="${1}"
     openssl pkcs7 -inform DER -in "${path}" -print_certs | openssl x509 -text -noout | "${PAGER:-less}"
@@ -141,7 +123,16 @@ then
   }
   p7m_extract() {
     path="${1}"
-    openssl smime -verify -noverify -in "${path}" -inform DER -out "$(echo "${1}" | sed "s/\.p7m$//")"
+    
+    printf "File originale: %s\n" "${path}"
+    while (printf '%s' "${path}" | grep -q '.p7m$'); do
+      # signer="$(openssl pkcs7 -inform DER -in "${path}" -print_certs | openssl x509 -text -noout | awk '...')" # da terminare
+      # printf "Estrazione %s\n" "${signer}"
+
+      path="$(echo "${path}" | sed 's/\.p7m$//')"
+      openssl smime -verify -noverify -in "${path}" -inform DER -out "${path}"
+    done
+    printf "File estratto: %s\n" "${path}"
   }
   ssl_get_cert() {
     domain="${1}"
@@ -153,9 +144,73 @@ then
     port="${2:-443}"
     echo | openssl s_client -connect "${domain}":"${port}" 2>/dev/null | openssl x509 -noout -dates
   }
+  ssl_get_issuer() {
+    printf " | %-50s | %-70s |\n" "DOMAIN" "ISSUER"
+    printf "%s\n" "$@" |
+      while IFS='' read -r domain
+      do
+        issuer="$(printf "\n" | openssl s_client -connect "${domain}:443" 2>/dev/null | openssl x509 -text -noout 2>/dev/null | awk 'BEGIN{FS=":"} /^\s*Issuer/ {print $2}')"
+        printf " | %-50s | %-70s |\n" "${domain}" "${issuer:- N/A}"
+      done
+  }
+
   ssl_verify() {
     domain="${1}"
     port="${2:-443}"
     echo | openssl s_client -connect "${domain}":"${port}" -brief
   }
 fi
+
+# bookmarks
+
+bookmarks() {
+  grep --extended-regexp --invert-match "^(#.*|\\s*)\$" "${HOME}/.config/sh/bookmarks" "${HOME}/.config/private/bookmarks" \
+    | awk 'gsub(/.*:/, "", $1)' \
+    | sort \
+    | column -t
+}
+
+bookmark_open() {
+  # shellcheck disable=SC2154
+  urls="$(bookmarks | fzf --header=BOOKMARKS --multi | awk 'BEGIN{ ORS = " " }{print $3}')"
+  [ -n "${urls}" ] && (sh -c "${BROWSER} ${urls}" >/dev/null 2>&1 &)
+}
+
+bookmark_copy() {
+  urls="$(bookmarks | fzf --header=BOOKMARKS --multi | awk 'BEGIN{ ORS = " " }{print $3}')"
+  [ -n "${urls}" ] && (printf "%s" "${urls}" | xclip -selection c)
+}
+
+# quick funxtions
+
+quick_action() {
+  source_file="$(mktemp)"
+  # shellcheck disable=SC2142
+  cat "${HOME}/.config/sh/quick_action" "${HOME}/.config/private/quick_action" >> "${source_file}"
+
+  source_funcs="$(awk -f ~/.config/sh/script/list_sh_funcs.awk "${source_file}")"
+  [ -n "${source_funcs}" ] || return
+
+  func_name="$(printf '%s' "${source_funcs}" | fzf-tmux -w 90% -h 60% | sed 's/().*//g')"
+  [ -n "${func_name}" ] && sh -c ". ${source_file}"; "${func_name}"
+
+  [ -f "${source_file}" ] && rm "${source_file}"
+}
+
+# projects
+
+projects() {
+  printf '%s' "${CDPATH}" \
+    | tr ':' "\n" \
+    | xargs --max-args=1 -I {} find {} -type d -maxdepth 1 2> /dev/null
+}
+
+project_open() {
+  dir="$(projects | fzf --header=PROJECTS)"
+  [ -d "${dir}" ] && cd "${dir}"
+}
+
+project_copy() {
+  dir="$(projects | fzf --header=PROJECTS)"
+  [ -d "${dir}" ] && (printf "%s" "${dir}" | xclip -selection c)
+}

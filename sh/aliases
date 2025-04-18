@@ -1,61 +1,62 @@
 #!/bin/sh
-# bash aliases
 
-alias mount='mount |column -t'
-alias mkdir='mkdir -pv'
-alias sha1='openssl sha1'
-alias bc='bc -l'
-alias wget='wget -c'
-alias iptlist='sudo /sbin/iptables -L -n -v --line-numbers'
+## SHORTCUT
 
-alias chown='chown --preserve-root'
-alias chmod='chmod --preserve-root'
+alias bc='bc --mathlib'
 alias chgrp='chgrp --preserve-root'
+alias chmod='chmod --preserve-root'
+alias chown='chown --preserve-root'
+alias diff='diff --recursive --side-by-side --ignore-all-space'
+alias mkdir='mkdir --parents --verbose'
+alias mount='mount | column --table'
+alias wget='wget --continue'
 
-alias meminfo='free -m -l -t'
-alias psmem='ps auxf | sort -nr -k 4'
-alias psmem10='ps auxf | sort -nr -k 4 | head -10'
-alias pscpu='ps auxf | sort -nr -k 3'
-alias pscpu10='ps auxf | sort -nr -k 3 | head -10'
+## SHORTENED
+
+alias d='rm -I --preserve-root'
+alias e='$EDITOR'
+alias h='history | less'
+alias j='jobs -l'
+alias k='kubectl'
+alias l='ls -l'
+alias m='mv'
+
+## MAIN
+
+alias sha1='openssl sha1'
+
 alias cpuinfo='lscpu'
+alias meminfo='free -m -l -t'
+alias pscpu10='ps auxf | sort -nr -k 3 | head -10'
+alias pscpu='ps auxf | sort -nr -k 3'
+alias psmem10='ps auxf | sort -nr -k 4 | head -10'
+alias psmem='ps auxf | sort -nr -k 4'
+
 alias gpumeminfo='grep -i --color memory /var/log/Xorg.0.log'
 
+alias pbcopy="xclip -selection c"
+alias pbpaste="xclip -selection c -o"
+
 # apt
-if type apt-get > /dev/null 2>&1
-then
+if type apt-get >/dev/null 2>&1; then
   alias apt-get="sudo apt-get"
   alias update='sudo apt-get update && sudo apt-get dist-upgrade --yes && apt-get autoremove --yes && apt-get autoclean'
 fi
 
-# batcat
-if type batcat > /dev/null 2>&1
-then
-  alias bat='batcat'
-fi
-
-# cargo
-if type cargo > /dev/null 2>&1
-then
-  # shellcheck source=/dev/null
-  . "${HOME}/.cargo/env"
-fi
-
-# codium
-if type codium > /dev/null 2>&1
-then
-  alias code='codium'
-fi
-
 # docker
-if type docker > /dev/null 2>&1
-then
+if type docker >/dev/null 2>&1; then
   alias dr="docker run --interactive --tty --rm"
-  alias dive="dr -v /var/run/docker.sock:/var/run/docker.sock wagoodman/dive"
+
+  alias dive="dr -v /var/run/docker.sock:/var/run/docker.sock cgr.dev/chainguard/dive"
+  # alias k9s="docker run --rm -it -v $KUBECONFIG:/root/.kube/config quay.io/derailed/k9s"
+  alias dokuwiki='xdg-open http://127.0.0.1:80 && docker run --rm -p 80:8080 -v /home/$HOME/wiki/:/storage dokuwiki/dokuwiki:stable'
+
+  # docker compose
+  alias phpstan="docker compose exec php './vendor/bin/phpstan' analyze"
 fi
 
 # ffmpeg
-if type ffmpeg > /dev/null 2>&1
-then
+if type ffmpeg >/dev/null 2>&1; then
   alias record_webcam='ffplay -f v4l2 -vf "hflip,format=yuv420p" -video_size 480x320 -i /dev/video0'
   alias record_screen0='ffplay -f x11grab -video_size 1920x1080 -framerate 25 -i :0.0'
   alias record_screen1='ffplay -f x11grab -video_size 1920x1080 -framerate 25 -i :0.0+1920,0'
@@ -79,19 +80,58 @@ if [ "${TERM}" = 'xterm-kitty' ]; then
   alias pbpaste="xclip -selection c -o"
 fi
 
-# wireshark
-alias wireshark='sudo wireshark >/dev/null 2>&1 &'
+# kubectl
+if type kubectl >/dev/null 2>&1; then
+  alias kg='kubectl get'
+  alias kl='kubectl logs'
+  alias ke='kubectl edit'
+  alias kd='kubectl describe'
+  alias kdd='kubectl delete'
+  alias kgp='kubectl get pods'
+  alias kgd='kubectl get deployments'
+  alias wkgp='watch kubectl get pod'
 
-# x11
-alias xreload="xrdb -load ~/.config/X11/Xresources"
+  alias kscript='__kubectl_exec_script'
+  alias kshell='__kubectl_exec_shell'
+  alias kweb='__kubectl_open_web'
 
-# last defaults
-alias b='URL=$(fzf --header=BOOKMARKS < "$HOME/.config/bookmarks" | awk "{print \$2}"); [ -n "$URL" ] && $BROWSER "$URL" &>/dev/null &'
-alias c='clear'
-alias d='rm -I --preserve-root'
-alias e='$EDITOR'
-alias h='history'
-alias j='jobs -l'
-alias l='ls -l'
-alias m='mv'
+  alias kfind='kubectl api-resources --verbs=list --namespaced -o name | xargs -n 1 kubectl get --show-kind --ignore-not-found'
 
+  # kubectx
+  # shellcheck disable=SC2154
+  alias kubectx='__ctx__="$(kubectl config get-contexts --output name | fzf)"; [ -z "${__ctx__}" ] || kubectl config use-context "${__ctx__}"'
+  alias kcx='kubectx'
+  alias kprod='kubectl config use-context gke_sportello-telematico_europe-west1-b_stu3-prod'
+  alias kstag='kubectl config use-context gke_sportello-telematico-dev_europe-west1-b_staging'
+
+  # kubens
+  # shellcheck disable=SC2154
+  alias kubens='__ns__="$(kubectl get namespaces --no-headers --output custom-columns=name:{.metadata.name} | fzf)"; [ -z "${__ns__}" ] || kubectl config set-context --current --namespace "${__ns__}"'
+  alias kns='kubens'
+fi
+
+## APPS
+
+type codium >/dev/null 2>&1 && alias code='codium'
+
+## X11
+
+alias xreload='xrdb -load ~/.config/X11/Xresources'
+
+## Private
+
+# bookmarks
+
+alias b='bookmarks'
+alias bo='bookmark_open'
+alias by='bookmark_copy'
+
+# quick actions
+
+alias qa='quick_action'
+
+# projects
+
+alias p='projects'
+alias po='project_open'
+alias py='project_copy'

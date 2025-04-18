@@ -1,11 +1,24 @@
 #!/bin/sh
 
-files="fzf=${HOME}/.fzf.bash
-"
+files="""
+${HOME}/.config/envman/PATH.env
+${HOME}/.config/envman/load.sh
+${HOME}/.config/private/aliases
+${HOME}/.config/private/functions
+${HOME}/.config/private/quick_action
+${HOME}/.config/private/shrc
+${HOME}/.fzf.bash
+"""
 
 # shellcheck disable=SC2034
-printf "%s\n" "$files" |
-  while IFS='=' read -r app file; do
+printf '%s' "${files}" \
+  | sed '/^\s*$/d' \
+  | while IFS='' read -r file; do
+    [ -s "${file}" ] || continue
+
     # shellcheck source=/dev/null
-    [ -s "${file}" ] && . "${file}" >/dev/null 2>&1
+    if ! . "${file}" >/dev/null 2>&1; then
+      printf "[ERROR] Could not source file %s for %s, message:\n%s\n" "${file}" "${app}" "${?}"
+      continue
+    fi
   done

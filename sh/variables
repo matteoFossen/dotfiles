@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # defaults
-BROWSER="$(which qutebrowser)"
+BROWSER="$(which firefox)"
 export BROWSER
 
 EDITOR="$(which vi)"
@@ -25,14 +25,25 @@ export PATH="${PATH}:${HOME}/.config/sh/script"
 export CDPATH=""
 
 # elinks
-export ELINKS_CONFDIR="${HOME}/.config/elinks"
+# export ELINKS_CONFDIR="${HOME}/.config/elinks"
 
 # emacs
-export PATH="${PATH}:${HOME}/.config/emacs/bin"
+# export PATH="${PATH}:${HOME}/.config/emacs/bin"
 
 # fzf
 export FZF_DEFAULT_COMMAND='rg --files --hidden --no-ignore'
 export FZF_DEFAULT_OPTS="--height=40% --layout=reverse --info=inline --border --margin=1 --padding=1"
+
+# kubectl
+K9S_EDITOR=${EDITOR:-vi}
+KUBECONFIG="${HOME}/.kube/config"
+KUBECTX_CURRENT_BGCOLOR="$(tput setab 7)" # white background
+KUBECTX_CURRENT_FGCOLOR="$(tput setaf 6)" # blue text
+
+export K9S_EDITOR
+export KUBECONFIG
+export KUBECTX_CURRENT_BGCOLOR
+export KUBECTX_CURRENT_FGCOLOR
 
 # nvm
 NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"

@@ -1,0 +1,66 @@
+#!/bin/sh
+
+#
+# browsing
+#
+
+browser_browsh() {
+  docker_run browsh/browsh "${*:-${WWW_HOME}}"
+}
+browser_carbonyl() {
+  docker_run fathyb/carbonyl "${*:-${WWW_HOME}}"
+}
+
+#
+# Containerization
+#
+
+docker_clean() {
+  sh -c "docker system prune -fa && docker volume rm $(docker volume ls -qf dangling=true)"
+}
+
+docker_run() {
+  sh -c "docker run --interactive --tty --rm ${*}"
+}
+
+#
+# Media
+#
+
+ffmpeg_record_screen_0() {
+  ffplay -f x11grab -video_size 1920x1080 -framerate 25 -i :0.0
+}
+ffmpeg_record_screen_1() {
+  ffplay -f x11grab -video_size 1920x1080 -framerate 25 -i :0.0+1920,0
+}
+ffmpeg_record_screen_all() {
+  ffplay -framerate 25 -f x11grab -i :0.0
+}
+ffmpeg_record_webcam() {
+  ffplay -f v4l2 -vf 'hflip,format=yuv420p' -video_size 480x320 -i /dev/video0
+}
+ffmpeg_screenshot_0() {
+  ffmpeg -f x11grab -video_size 1920x1080 -framerate 1 -i :0.0 -vframes 1
+}
+ffmpeg_screenshot_1() {
+  ffmpeg -f x11grab -video_size 1920x1080 -framerate 1 -i :0.0+1920,0 -vframes 1
+}
+ffmpeg_screenshot_all() {
+  ffmpeg -f x11grab -framerate 1 -i :0.0 -vframes 1
+}
+
+#
+# Firewall
+#
+
+iptables_list() {
+  sudo iptables -L -vn --line-numbers
+}
+
+#
+# Gnome
+#
+
+gnome_darkmode() {
+  (gsettings get org.gnome.desktop.interface gtk-theme | grep -q 'dark' && gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita') || gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita:dark'
+}

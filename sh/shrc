@@ -20,5 +20,6 @@
 #shellcheck source=/dev/null
 [ -f "${HOME}/.config/sh/completion" ] && . "${HOME}/.config/sh/completion"
 
-PROMPT_COMMAND='GIT_CTX="$(git branch --show-current 2>/dev/null)"'
-PS1='\[\e[91m\]/\[\e[91m\][\[\e[97m\]\A\[\e[91m\]]\[\e[91m\]-\[\e[91m\][\[\e[92m\]\u\[\e[92m\]@\[\e[92m\]\H\[\e[91m\]]\[\e[91m\]-\[\e[91m\][\[\e[38;5;45m\]\W\[\e[91m\]]\[\e[91m\]-\[\e[91m\][\[\e[93m\]${GIT_CTX}\[\e[91m\]]\[\e[91m\]]\n\[\e[91m\]\\\[\e[91m\]_\[\e[0m\] \[\e[97m\]\\$\[\e[0m\] '
+# Private
+#shellcheck source=/dev/null
+[ -f "${HOME}/.config/private/shrc" ] && . "${HOME}/.config/private/shrc"
