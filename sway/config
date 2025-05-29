@@ -3,6 +3,7 @@
 ### Variables
 
 set $mod Mod4
+floating_modifier $mod normal
 
 set $left h
 set $down j
@@ -10,25 +11,40 @@ set $up k
 set $right l
 
 set $term alacritty
-set $menu wmenu-run
+set $notifier mako
 
-include /etc/sway/config-vars.d/*
+set $bar i3status
+#set $bar while date +'%Y-%m-%d %X'; do sleep 1; done
 
-### Output configuration
-# output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
-output * bg $HOME/Documenti/wallpaper.jpg fill
-# output * bg #50C878 solid_color
+set $menu wmenu -i -p "Run:"
+#set $appmenu IFS=':'; find $PATH -type f -o -type l -perm -111 2>/dev/null | sed 's|.*/||' | sort -u | $menu | xargs -r sh -c
+set $appmenu wmenu-run
 
+set $lock swaylock \
+  --color 1e1e1e \
+  --ignore-empty-password \
+  --inside-clear-color 11a8cd \
+  --inside-color cccccc \
+  --inside-ver-color 2472c8 \
+  --inside-wrong-color cd3131 \
+  --ring-clear-color 29b8db \
+  --ring-color ffffff \
+  --ring-ver-color 3b8eea \
+  --ring-wrong-color f14c4c \
+  --show-failed-attempts
 
-### Idle configuration
+set $idle swayidle -w \
+  before-sleep 'playerctl pause; $swaylock' \
+  resume 'swaymsg "output * power on "' \
+  timeout 1800 "$swaylock" \
+  timeout 1805 'swaymsg "output * power off"'
 
-exec swayidle -w \
-  timeout 1800 'swaylock -f' \
-  timeout 1805 'swaymsg "output * power off"' \
-  before-sleep 'playerctl pause; swaylock' \
-  resume 'swaymsg "output * power on "'
+# Startups
+exec --no-startup-id dbus-update-activation-environment --all
+exec $idle
+exec $notifier
 
-### Input configuration
+# I/O config
 
 input type:keyboard {
   xkb_layout it
@@ -39,26 +55,26 @@ input type:touchpad {
   natural_scroll enabled
 }
 
+output * {
+  bg $HOME/.config/wallpaper fill
+  # bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
+  # bg #50C878 solid_color
+}
+
 # Clipboard
 
 exec wl-paste -t text --watch clipman store --no-persist
 
-# Notifications
-
-exec swaync
-bindsym $mod+Shift+d swaync-client -t -sw
-
 ### Key bindings
 
-bindsym $mod+Return exec $term
+bindsym $mod+Shift+Return exec $term
+bindsym $mod+b bar mode toggle
+bindsym $mod+p exec $appmenu
+
 bindsym $mod+Shift+c kill
-bindsym $mod+p exec $menu
+bindsym $mod+Shift+q reload
 
-floating_modifier $mod normal
-
-bindsym $mod+Shift+r reload
-
-bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
+#bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
 
 # Windows: move
 
@@ -67,21 +83,10 @@ bindsym $mod+$down focus down
 bindsym $mod+$up focus up
 bindsym $mod+$right focus right
 
-bindsym $mod+Left focus left
-bindsym $mod+Down focus down
-bindsym $mod+Up focus up
-bindsym $mod+Right focus right
-
-
 bindsym $mod+Shift+$left move left
 bindsym $mod+Shift+$down move down
 bindsym $mod+Shift+$up move up
 bindsym $mod+Shift+$right move right
-
-bindsym $mod+Shift+Left move left
-bindsym $mod+Shift+Down move down
-bindsym $mod+Shift+Up move up
-bindsym $mod+Shift+Right move right
 
 # Windows: workspaces
 
@@ -112,28 +117,20 @@ bindsym $mod+Shift+p move workspace to output right
 
 # Windows: layout
 
-bindsym $mod+b splith
-bindsym $mod+v splitv
-
+bindsym $mod+t layout toggle split
+bindsym $mod+m layout tabbed
 bindsym $mod+s layout stacking
-bindsym $mod+w layout tabbed
-bindsym $mod+e layout toggle split
 
 bindsym $mod+f fullscreen
 bindsym $mod+Shift+space floating toggle
 bindsym $mod+space focus mode_toggle
 bindsym $mod+a focus parent
-
-# Windows: borders
-smart_gaps on
-gaps inner 3
-gaps outer 5
-default_border pixel 3
-
-# Scratchpad
+bindsym Mod1+tab workspace back_and_forth
 
 bindsym $mod+Shift+minus move scratchpad
 bindsym $mod+minus scratchpad show
+bindsym $mod+r mode "resize"
+bindsym $mod+Ctrl+e exec sh -c 'case "$(printf "lock\nreboot\nhalt" | $menu)" in lock) $lock ;; reboot) systemctl reboot ;; halt) systemctl poweroff ;; esac'
 
 # Function Keys
 bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
@@ -145,12 +142,42 @@ bindsym XF86AudioPrev exec playerctl previous
 bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym XF86MonBrightnessDown exec brightnessctl set 10%-
 bindsym XF86MonBrightnessUp exec brightnessctl set 10%+
-bindsym XF86Search exec wmenu-run
+bindsym XF86Search exec $appmenu
 bindsym Print exec grim -g "$(slurp)"
 # bindsym XF86KbdLightOnOff exec 
 bindsym XF86RFKill exec sudo rfkill toggle all
 
-# Windows: resize
+# Windows: rules
+
+for_window [window_role = "pop-up"] floating enable
+for_window [window_role = "bubble"] floating enable
+for_window [window_role = "dialog"] floating enable
+for_window [window_type = "dialog"] floating enable
+for_window [window_role = "task_dialog"] floating enable
+for_window [window_type = "menu"] floating enable
+for_window [app_id = "floating"] floating enable
+for_window [app_id = "floating_update"] floating enable, resize set width 1000px height 600px
+for_window [class = "(?i)pinentry"] floating enable
+for_window [title = "Administrator privileges required"] floating enable
+
+for_window [title = "About Mozilla Firefox"] floating enable
+for_window [window_role = "About"] floating enable
+for_window [app_id="firefox" title="Library"] floating enable, border pixel 1, sticky enable
+for_window [title = "Firefox - Sharing Indicator"] kill
+for_window [title = "Firefox — Sharing Indicator"] kill
+
+for_window [class="^Steam$" title="^Friends$"] floating enable
+for_window [class="^Steam$" title="Steam - News"] floating enable
+for_window [class="^Steam$" title=".* - Chat"] floating enable
+for_window [class="^Steam$" title="^Settings$"] floating enable
+for_window [class="^Steam$" title=".* - event started"] floating enable
+for_window [class="^Steam$" title=".* CD key"] floating enable
+for_window [class="^Steam$" title="^Steam - Self Updater$"] floating enable
+for_window [class="^Steam$" title="^Screenshot Uploader$"] floating enable
+for_window [class="^Steam$" title="^Steam Guard - Computer Authorization Required$"] floating enable
+for_window [title="^Steam Keyboard$"] floating enable
+
+# Modes
 
 mode "resize" {
     bindsym $left resize shrink width 10px
@@ -158,29 +185,38 @@ mode "resize" {
     bindsym $up resize shrink height 10px
     bindsym $right resize grow width 10px
 
-    bindsym Left resize shrink width 10px
-    bindsym Down resize grow height 10px
-    bindsym Up resize shrink height 10px
-    bindsym Right resize grow width 10px
-
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }
-bindsym $mod+r mode "resize"
 
-# Status Bar
+# Theme
+
+set $bgcolor    #523d64
+set $in-bgcolor #363636
+set $text       #ffffff
+set $u-bgcolor  #ff0000
+set $indicator  #a8a3c1
+set $in-text    #969696
+set $focused-ws #523d6480
+set $bar-color  #523d640D
+
+#                       border          background      text            indicator (a line which shows where the next window will be placed)     
+client.focused          $bgcolor        $bgcolor        $text           $indicator
+client.unfocused        $in-bgcolor     $in-bgcolor     $in-text        $in-bgcolor
+client.focused_inactive $in-bgcolor     $in-bgcolor     $in-text        $in-bgcolor
+client.urgent           $u-bgcolor      $u-bgcolor      $text           $u-bgcolor
+
+gaps inner 5
+gaps outer 10
+default_border pixel 3
 
 bar {
-    position top
-
-    status_command while date +'%Y-%m-%d %X'; do sleep 1; done
-    #status_command i3status
-
     colors {
-        statusline #ffffff
-        background #323232
-        inactive_workspace #32323200 #32323200 #5c5c5c
+        statusline $text
+        background $in-bgcolor
+        inactive_workspace $in-bgcolor $in-bgcolor $text
     }
+    position top
+    status_command $bar
+    tray_output none
 }
-
-include /etc/sway/config.d/*
