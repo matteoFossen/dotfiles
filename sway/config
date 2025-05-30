@@ -2,7 +2,7 @@
 
 ### Variables
 
-set $mod Mod4
+set $mod Mod1
 floating_modifier $mod normal
 
 set $left h
@@ -11,26 +11,31 @@ set $up k
 set $right l
 
 set $term alacritty
-set $notifier mako
+
+set $notifier swaync
+bindsym $mod+v exec swaync-client -t -sw
 
 set $bar i3status
-#set $bar while date +'%Y-%m-%d %X'; do sleep 1; done
+#set $bar while date +'%c '; do sleep 1; done
+# set $bar_up_left while date +'%Y-%m-%d %X'; do sleep 1; done
+# set $bar_up_center while printf 'ciao'; do sleep 1; done
+# set $bar_up_right while printf 'bella'; do sleep 1; done
 
-set $menu wmenu -i -p "Run:"
+set $menu wmenu -p "Run:" -i -N $grey -n $yellow -M $yellow -m $grey -S $yellow -s $grey
 #set $appmenu IFS=':'; find $PATH -type f -o -type l -perm -111 2>/dev/null | sed 's|.*/||' | sort -u | $menu | xargs -r sh -c
-set $appmenu wmenu-run
+set $appmenu wmenu-run -i -N $grey -n $yellow -M $yellow -m $grey -S $yellow -s $grey
 
 set $lock swaylock \
-  --color 1e1e1e \
+  --color $grey \
   --ignore-empty-password \
-  --inside-clear-color 11a8cd \
-  --inside-color cccccc \
-  --inside-ver-color 2472c8 \
-  --inside-wrong-color cd3131 \
-  --ring-clear-color 29b8db \
-  --ring-color ffffff \
-  --ring-ver-color 3b8eea \
-  --ring-wrong-color f14c4c \
+  --inside-clear-color $blue \
+  --inside-color $grey \
+  --inside-ver-color $green \
+  --inside-wrong-color $red \
+  --ring-clear-color $blue \
+  --ring-color $grey \
+  --ring-ver-color $green \
+  --ring-wrong-color $red \
   --show-failed-attempts
 
 set $idle swayidle -w \
@@ -51,14 +56,14 @@ input type:keyboard {
 }
 
 input type:touchpad {
-  tap enabled
-  natural_scroll enabled
+  tap             enabled
+  natural_scroll  enabled
 }
 
 output * {
   bg $HOME/.config/wallpaper fill
   # bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
-  # bg #50C878 solid_color
+  # bg #458588 solid_color
 }
 
 # Clipboard
@@ -67,156 +72,195 @@ exec wl-paste -t text --watch clipman store --no-persist
 
 ### Key bindings
 
-bindsym $mod+Shift+Return exec $term
-bindsym $mod+b bar mode toggle
-bindsym $mod+p exec $appmenu
+bindsym  $mod+Shift+Return  exec  $term     
+bindsym  $mod+b             bar   mode      toggle
+bindsym  $mod+p             exec  $appmenu  
 
-bindsym $mod+Shift+c kill
-bindsym $mod+Shift+q reload
+bindsym  $mod+Shift+c  kill
+bindsym  $mod+Shift+q  reload
 
 #bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
 
 # Windows: move
 
-bindsym $mod+$left focus left
-bindsym $mod+$down focus down
-bindsym $mod+$up focus up
-bindsym $mod+$right focus right
-
-bindsym $mod+Shift+$left move left
-bindsym $mod+Shift+$down move down
-bindsym $mod+Shift+$up move up
-bindsym $mod+Shift+$right move right
+bindsym {
+  $mod+$left   focus  left
+  $mod+$down   focus  down
+  $mod+$up     focus  up
+  $mod+$right  focus  right
+  
+  $mod+Shift+$left   move  left
+  $mod+Shift+$down   move  down
+  $mod+Shift+$up     move  up
+  $mod+Shift+$right  move  right
+}
 
 # Windows: workspaces
+set $ws1 "1:home"
+set $ws2 "2:var"
+set $ws3 "3:www"
+set $ws4 "4:notes"
+set $ws5 "5:games"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8:mail"
+set $ws9 "9:sys"
+set $ws10 "10"
 
-bindsym $mod+1 workspace number 1
-bindsym $mod+2 workspace number 2
-bindsym $mod+3 workspace number 3
-bindsym $mod+4 workspace number 4
-bindsym $mod+5 workspace number 5
-bindsym $mod+6 workspace number 6
-bindsym $mod+7 workspace number 7
-bindsym $mod+8 workspace number 8
-bindsym $mod+9 workspace number 9
-bindsym $mod+0 workspace number 10
+bindsym {
+  $mod+1  workspace  number  $ws1
+  $mod+2  workspace  number  $ws2
+  $mod+3  workspace  number  $ws3
+  $mod+4  workspace  number  $ws4
+  $mod+5  workspace  number  $ws5
+  $mod+6  workspace  number  $ws6
+  $mod+7  workspace  number  $ws7
+  $mod+8  workspace  number  $ws8
+  $mod+9  workspace  number  $ws9
+  $mod+0  workspace  number  $ws10
 
-bindsym $mod+Shift+1 move container to workspace number 1
-bindsym $mod+Shift+2 move container to workspace number 2
-bindsym $mod+Shift+3 move container to workspace number 3
-bindsym $mod+Shift+4 move container to workspace number 4
-bindsym $mod+Shift+5 move container to workspace number 5
-bindsym $mod+Shift+6 move container to workspace number 6
-bindsym $mod+Shift+7 move container to workspace number 7
-bindsym $mod+Shift+8 move container to workspace number 8
-bindsym $mod+Shift+9 move container to workspace number 9
-bindsym $mod+Shift+0 move container to workspace number 10
+  $mod+Shift+1  move  container  to  workspace  number  $ws1
+  $mod+Shift+2  move  container  to  workspace  number  $ws2
+  $mod+Shift+3  move  container  to  workspace  number  $ws3
+  $mod+Shift+4  move  container  to  workspace  number  $ws4
+  $mod+Shift+5  move  container  to  workspace  number  $ws5
+  $mod+Shift+6  move  container  to  workspace  number  $ws6
+  $mod+Shift+7  move  container  to  workspace  number  $ws7
+  $mod+Shift+8  move  container  to  workspace  number  $ws8
+  $mod+Shift+9  move  container  to  workspace  number  $ws9
+  $mod+Shift+0  move  container  to  workspace  number  $ws10
+}
 
-bindsym $mod+Shift+n move workspace to output left
-bindsym $mod+Shift+p move workspace to output right
+bindsym  $mod+Shift+n  move  workspace  to  output  left
+bindsym  $mod+Shift+p  move  workspace  to  output  right
 
 # Windows: layout
 
-bindsym $mod+t layout toggle split
-bindsym $mod+m layout tabbed
-bindsym $mod+s layout stacking
-
-bindsym $mod+f fullscreen
-bindsym $mod+Shift+space floating toggle
-bindsym $mod+space focus mode_toggle
-bindsym $mod+a focus parent
-bindsym Mod1+tab workspace back_and_forth
+bindsym {
+  $mod+t            layout      toggle          split
+  $mod+m            layout      tabbed          
+  $mod+s            layout      stacking        
+  $mod+f            fullscreen                  
+  $mod+Shift+space  floating    toggle          
+  $mod+space        focus       mode_toggle     
+  $mod+a            focus       parent          
+  Mod1+tab          workspace   back_and_forth  
+}
 
 bindsym $mod+Shift+minus move scratchpad
 bindsym $mod+minus scratchpad show
+
 bindsym $mod+r mode "resize"
 bindsym $mod+Ctrl+e exec sh -c 'case "$(printf "lock\nreboot\nhalt" | $menu)" in lock) $lock ;; reboot) systemctl reboot ;; halt) systemctl poweroff ;; esac'
 
 # Function Keys
-bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
-bindsym XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
-bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
-bindsym XF86AudioNext exec playerctl next
-bindsym XF86AudioPlay exec playerctl play-pause
-bindsym XF86AudioPrev exec playerctl previous
-bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
-bindsym XF86MonBrightnessDown exec brightnessctl set 10%-
-bindsym XF86MonBrightnessUp exec brightnessctl set 10%+
-bindsym XF86Search exec $appmenu
-bindsym Print exec grim -g "$(slurp)"
-# bindsym XF86KbdLightOnOff exec 
-bindsym XF86RFKill exec sudo rfkill toggle all
+bindsym {
+  XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+  XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+  XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+  XF86AudioNext exec playerctl next
+  XF86AudioPlay exec playerctl play-pause
+  XF86AudioPrev exec playerctl previous
+  XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+  XF86MonBrightnessDown exec brightnessctl set 10%-
+  XF86MonBrightnessUp exec brightnessctl set 10%+
+  XF86Search exec $appmenu
+  Print exec grim -g "$(slurp)"
+  #XF86KbdLightOnOff exec 
+  XF86RFKill exec sudo rfkill toggle all
+}
 
 # Windows: rules
 
-for_window [window_role = "pop-up"] floating enable
-for_window [window_role = "bubble"] floating enable
-for_window [window_role = "dialog"] floating enable
-for_window [window_type = "dialog"] floating enable
-for_window [window_role = "task_dialog"] floating enable
-for_window [window_type = "menu"] floating enable
-for_window [app_id = "floating"] floating enable
-for_window [app_id = "floating_update"] floating enable, resize set width 1000px height 600px
-for_window [class = "(?i)pinentry"] floating enable
-for_window [title = "Administrator privileges required"] floating enable
+for_window {
+  [app_id = "floating"] floating enable
+  [app_id = "floating_update"] floating enable, resize set width 1000px height 600px
+  [class = "(?i)pinentry"] floating enable
+  [title = "Administrator privileges required"] floating enable
+  [window_role = "bubble"] floating enable
+  [window_role = "dialog"] floating enable
+  [window_role = "pop-up"] floating enable
+  [window_role = "task_dialog"] floating enable
+  [window_type = "dialog"] floating enable
+  [window_type = "menu"] floating enable
+  [shell="xwayland"] title_format "%title [XWayland]"
+}
 
-for_window [title = "About Mozilla Firefox"] floating enable
-for_window [window_role = "About"] floating enable
-for_window [app_id="firefox" title="Library"] floating enable, border pixel 1, sticky enable
-for_window [title = "Firefox - Sharing Indicator"] kill
-for_window [title = "Firefox — Sharing Indicator"] kill
+for_window [app_id="^.*\.desktop$"] move to workspace $ws1, workspace number $ws1
 
-for_window [class="^Steam$" title="^Friends$"] floating enable
-for_window [class="^Steam$" title="Steam - News"] floating enable
-for_window [class="^Steam$" title=".* - Chat"] floating enable
-for_window [class="^Steam$" title="^Settings$"] floating enable
-for_window [class="^Steam$" title=".* - event started"] floating enable
-for_window [class="^Steam$" title=".* CD key"] floating enable
-for_window [class="^Steam$" title="^Steam - Self Updater$"] floating enable
-for_window [class="^Steam$" title="^Screenshot Uploader$"] floating enable
-for_window [class="^Steam$" title="^Steam Guard - Computer Authorization Required$"] floating enable
-for_window [title="^Steam Keyboard$"] floating enable
+for_window [app_id="^(Alacritty|[Ff]oot|[Xx]term|kitty|.*[Tt]erminal)$"] move to workspace $ws2, workspace number $ws2
+
+for_window {
+  [app_id="firefox" title="Library"] floating enable, border pixel 1, sticky enable
+  [title="^.*([Ff]irefox|[Cc]hromium|[Gg]oogle[- ][Cc]hrome|[Bb]rave[- ]browser|[Qq]utebrowser)$"] move to workspace $ws3, workspace number $ws3
+  [title = "Firefox .* Sharing Indicator"] kill
+  [window_role = "About (Mozilla Firefox)?"] floating enable
+}
+
+for_window {
+  [app_id="^emacs.*"] move to workspace $ws4, workspace number $ws4
+  [class="^[Oo]bsidian$"] move to workspace $ws4, workspace number $ws4
+}
+
+for_window {
+  [class="^Steam$" title=".* (- (Chat|event started|Keyboard|News|Self Updater)|CD key)"] floating enable
+  [class="^Steam$" title="^(Friends|Screenshot .*|Settings|Steam Guard - .*)$"] floating enable
+  [class="^Steam$"] move to workspace $ws5, workspace number $ws5
+}
 
 # Modes
 
 mode "resize" {
-    bindsym $left resize shrink width 10px
-    bindsym $down resize grow height 10px
-    bindsym $up resize shrink height 10px
-    bindsym $right resize grow width 10px
-
-    bindsym Return mode "default"
-    bindsym Escape mode "default"
+  bindsym  $left   resize  shrink  width   10px
+  bindsym  $down   resize  grow    height  10px
+  bindsym  $up     resize  shrink  height  10px
+  bindsym  $right  resize  grow    width   10px
+  
+  bindsym Return mode "default"
+  bindsym Escape mode "default"
 }
 
 # Theme
 
-set $bgcolor    #523d64
-set $in-bgcolor #363636
-set $text       #ffffff
-set $u-bgcolor  #ff0000
-set $indicator  #a8a3c1
-set $in-text    #969696
-set $focused-ws #523d6480
-set $bar-color  #523d640D
+set {
+  $blue    458588
+  $green   8ec07c
+  $grey    3c3836
+  $red     cc241d
+  $yellow  d79921
+}
 
-#                       border          background      text            indicator (a line which shows where the next window will be placed)     
-client.focused          $bgcolor        $bgcolor        $text           $indicator
-client.unfocused        $in-bgcolor     $in-bgcolor     $in-text        $in-bgcolor
-client.focused_inactive $in-bgcolor     $in-bgcolor     $in-text        $in-bgcolor
-client.urgent           $u-bgcolor      $u-bgcolor      $text           $u-bgcolor
+  #class                   border   backgr.  text   indicator  child_border
+client.background        $grey                               
+client.focused           $yellow  $yellow  $grey  $grey      $yellow
+client.focused_inactive  $grey    $grey    $blue  $blue      $grey
+client.placeholder       $green   $green   $grey  $grey      $green
+client.unfocused         $grey    $grey    $blue  $blue      $grey
+client.urgent            $red     $red     $grey  $grey      $red
 
-gaps inner 5
-gaps outer 10
-default_border pixel 3
+gaps {
+  inner  8
+  outer  10
+}
+default_border  pixel  1
 
 bar {
+    id 1
+    tray_output *
+
     colors {
-        statusline $text
-        background $in-bgcolor
-        inactive_workspace $in-bgcolor $in-bgcolor $text
+      active_workspace    $grey    $grey    $blue
+      background          $grey             
+      focused_workspace   $grey    $yellow  $grey
+      inactive_workspace  $grey    $grey    $blue
+      statusline          $yellow
     }
+
     position top
+    gaps 11 15
+    separator_symbol |
+    strip_workspace_numbers yes
+    workspace_min_width 30
+
     status_command $bar
-    tray_output none
 }
