@@ -41,7 +41,7 @@ feh --bg-fill --randomize $HOME/.config/wallpaper/* &
 
 Copia il contenuto del file `tmux.conf` in `$HOME/.config/tmux/tmux.conf`.
 
-```bash
+```sh
 sudo apt install tmux
 ```
 
@@ -55,7 +55,7 @@ Per dargli voce utilizzare https://github.com/rhasspy/piper
 
 ### Zsh
 
-```bash
+```sh
 sudo apt install zsh
 echo "export ZSH_CUSTOM=$HOME/config/zsh/oh-my-zsh" >> $HOME/config/zsh/zshrc
 chsh -s $(which zsh)
@@ -64,3 +64,15 @@ git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$HOME/c
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/config/zsh/oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/config/zsh/oh-my-zsh/custom}/themes/powerlevel10k
 ```
+
+## Nix
+
+Nixos encrypted install:
+```
+https://jadarma.github.io/blog/posts/2024/08/installing-nixos-with-flakes-and-lvm-on-luks/
+```
+
+Next:
+* Separate LUKS header configuration.
+* Separate FIDO2 device encryption.
+* How to store passwords for LUKS? (people suggests keepass syncronized on devices)
