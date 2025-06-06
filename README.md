@@ -68,9 +68,13 @@ git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$
 ## Nix
 
 Nixos encrypted install:
-```
-https://jadarma.github.io/blog/posts/2024/08/installing-nixos-with-flakes-and-lvm-on-luks/
-```
+
+* Flake starting templates:  
+  https://github.com/Misterio77/nix-starter-configs
+* Flake LUKS+LVM setup:  
+  https://jadarma.github.io/blog/posts/2024/08/installing-nixos-with-flakes-and-lvm-on-luks
+* Yubikey Encryption:  
+  https://nixos.wiki/wiki/Yubikey
 
 Next:
 * Separate LUKS header configuration.
